@@ -4,6 +4,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "send-emails": "tsx src/cli/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -12,11 +13,17 @@
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^25.0.6",
-    "prisma": "^7.2.0"
+    "prisma": "^7.2.0",
+    "tsx": "^4.21.0"
   },
   "dependencies": {
     "@prisma/adapter-better-sqlite3": "^7.2.0",
     "@prisma/client": "^7.2.0",
-    "dotenv": "^17.2.3"
+    "@react-email/components": "^1.0.4",
+    "@react-email/render": "^2.0.2",
+    "@types/nodemailer": "^7.0.5",
+    "commander": "^14.0.2",
+    "dotenv": "^17.2.3",
+    "nodemailer": "^7.0.12"
   }
 }

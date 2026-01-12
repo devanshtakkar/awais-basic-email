@@ -14,10 +14,24 @@ datasource db {
 }
 
 model Applicants {
-  id         String @id @default(uuid())
+  id         String     @id @default(uuid())
   first_name String
   last_name  String
-  email      String @unique
+  email      String     @unique
   phone      String?
   country    String?
+  emailLogs  EmailLogs[]
+}
+
+model EmailLogs {
+  id            String     @id @default(uuid())
+  applicantId   String
+  applicant     Applicants @relation(fields: [applicantId], references: [id], onDelete: Cascade)
+  templateName  String
+  sentAt        DateTime   @default(now())
+  status        String     // 'success' | 'failed'
+  errorMessage  String?
+  emailSubject  String
+  emailBody     String
+  retryCount    Int        @default(0)
 }
