@@ -1,0 +1,15 @@
+we want to write a cli program that sends the email to the applicants. the applicants are stored in the applicants model
+
+the emails wil be send using nodemailer 
+the email templates are constructed using the react email 
+the cli will use commander
+we can select the template by name
+a user can be sent multiple emails
+keep the email logs in a database, one applicnat can be sent multiple emails
+there is no need to add a scheduler, emails are sent to the pending applicants when the script runs
+
+parameters of the script are -l --limit
+- t --template-name
+- c --country (optional)
+
+please create a plan for this and ask me any questions regarding the packages or else 
