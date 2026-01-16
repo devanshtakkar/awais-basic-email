@@ -1,0 +1,14 @@
+cli tool that takes the excel file
+parses it via the xlxs library and save it to the local data base
+
+
+upload the excel file/parses data 
+make an express endpoint in this repo that saves that data
+
+
+then send the emails via smtp
+https://ethereal.email/create for testing SMTP
+
+so not send the email to the same person again.
+
+we add the path to the file in cli tools
