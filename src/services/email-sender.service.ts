@@ -13,18 +13,17 @@ export class EmailSenderService {
     templateName: string,
     dryRun: boolean = false
   ): Promise<EmailResult> {
-    const { id, email, first_name, last_name } = applicant;
+    const { id, email, full_name } = applicant;
 
     try {
       // Render template
       const { html, subject } = await templateService.renderTemplate(templateName, {
-        firstName: first_name,
-        lastName: last_name,
+        fullName: full_name,
         email,
       });
 
       if (dryRun) {
-        senderLogger.dryRun(`Would send email to ${email} (${first_name} ${last_name})`);
+        senderLogger.dryRun(`Would send email to ${email} (${full_name})`);
         senderLogger.dryRun(`Subject: ${subject}`);
         return {
           success: true,

@@ -24,8 +24,7 @@ export interface SendEmailOptions {
 }
 
 export interface TemplateData {
-  firstName: string;
-  lastName: string;
+  fullName: string;
   email: string;
   [key: string]: any;
 }

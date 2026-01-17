@@ -3,36 +3,31 @@ import { prisma } from '../src/lib/prisma.js';
 async function seedApplicants() {
   const applicants = [
     {
-      first_name: 'John',
-      last_name: 'Doe',
+      full_name: 'John Doe',
       email: 'john.doe@example.com',
       phone: '+1234567890',
       country: 'USA',
     },
     {
-      first_name: 'Jane',
-      last_name: 'Smith',
+      full_name: 'Jane Smith',
       email: 'jane.smith@example.com',
       phone: '+1234567891',
       country: 'Canada',
     },
     {
-      first_name: 'Bob',
-      last_name: 'Johnson',
+      full_name: 'Bob Johnson',
       email: 'bob.johnson@example.com',
       phone: '+1234567892',
       country: 'USA',
     },
     {
-      first_name: 'Alice',
-      last_name: 'Williams',
+      full_name: 'Alice Williams',
       email: 'alice.williams@example.com',
       phone: '+1234567893',
       country: 'Canada',
     },
     {
-      first_name: 'Charlie',
-      last_name: 'Brown',
+      full_name: 'Charlie Brown',
       email: 'charlie.brown@example.com',
       phone: '+1234567894',
       country: 'UK',

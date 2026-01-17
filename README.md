@@ -5,6 +5,8 @@ A CLI tool for sending emails to applicants using nodemailer and React Email tem
 ## Features
 
 - Send emails to applicants stored in the database
+- Import applicants from Excel files
+- Deduplication - skip emails already sent
 - Select email templates by name
 - Filter applicants by country
 - Dry-run mode for testing
@@ -80,6 +82,62 @@ Dry run to preview:
 npm run send-emails -- send -l 10 -t welcome --dry-run
 ```
 
+### Import from Excel
+
+```bash
+npm run excel-import -- process -f <excel-file-path> -t <template-name> [options]
+```
+
+#### Options
+
+| Option | Short | Description | Required |
+|--------|-------|-------------|----------|
+| `--file` | `-f` | Path to Excel file | Yes |
+| `--template-name` | `-t` | Name of the email template to use | Yes |
+| `--url` | `-u` | Express endpoint URL (default: http://localhost:3000/api/upload) | No |
+| `--dry-run` | N/A | Preview without sending to server | No |
+
+#### Excel File Format
+
+The Excel file should have the following columns:
+
+| Column | Required | Description |
+|--------|----------|-------------|
+| Name | Yes | First name of the applicant |
+| email | Yes | Email address |
+| job title | No | Job title (can be empty) |
+
+#### Examples
+
+Create a sample Excel file:
+```bash
+npm run create-sample-excel
+```
+
+Preview Excel file (dry run):
+```bash
+npm run excel-import -- process -f sheets/sample-applicants.xlsx -t welcome --dry-run
+```
+
+Import from Excel and send emails:
+```bash
+npm run excel-import -- process -f sheets/sample-applicants.xlsx -t welcome
+```
+
+#### Running the Express Server
+
+Before importing from Excel, make sure the Express server is running:
+
+```bash
+npm run server
+```
+
+The server will start on port 3000 (or the PORT specified in your .env file).
+
+#### Deduplication
+
+The system automatically checks if an applicant with the same email already exists in the database. If found, that applicant is skipped and not sent an email again. This prevents duplicate emails to the same person.
+
 ## Available Templates
 
 Currently available templates:
@@ -129,10 +187,11 @@ templateService.registerTemplate('my-template', (data) => ({
 model Applicants {
   id         String     @id @default(uuid())
   first_name String
-  last_name  String
+  last_name  String?
   email      String     @unique
   phone      String?
   country    String?
+  job_title  String?
   emailLogs  EmailLogs[]
 }
 ```
@@ -161,7 +220,10 @@ crypto-email/
 │   └── schema.prisma
 ├── src/
 │   ├── cli/
-│   │   └── index.ts           # CLI entry point with commander
+│   │   ├── index.ts           # CLI entry point for sending emails
+│   │   └── excel-import.ts     # CLI entry point for Excel import
+│   ├── server/
+│   │   └── index.ts            # Express server for receiving Excel data
 │   ├── services/
 │   │   ├── applicant.service.ts
 │   │   ├── email.service.ts   # Nodemailer configuration
@@ -176,8 +238,11 @@ crypto-email/
 │   │   └── logger.ts
 │   └── lib/
 │       └── prisma.ts
+├── sheets/
+│   └── sample-applicants.xlsx # Sample Excel file
 ├── scripts/
-│   └── seed-applicants.ts
+│   ├── seed-applicants.ts
+│   └── create-sample-excel.ts
 ├── .env
 ├── .env.example
 └── package.json

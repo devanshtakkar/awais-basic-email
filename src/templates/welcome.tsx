@@ -1,20 +1,19 @@
 import { Body, Button, Container, Head, Heading, Html, Link, Preview, Section, Text } from '@react-email/components';
 
 interface WelcomeEmailProps {
-  firstName: string;
-  lastName: string;
+  fullName: string;
   email: string;
 }
 
-export function WelcomeEmail({ firstName, lastName, email }: WelcomeEmailProps) {
+export function WelcomeEmail({ fullName, email }: WelcomeEmailProps) {
   return (
     <Html>
       <Head />
       <Preview>Welcome to Crypto Email</Preview>
       <Body style={main}>
         <Container style={container}>
-          <Heading style={heading}>Welcome, {firstName}!</Heading>
-          <Text style={text}>Dear {firstName} {lastName},</Text>
+          <Heading style={heading}>Welcome, {fullName}!</Heading>
+          <Text style={text}>Dear {fullName},</Text>
           <Text style={text}>
             Thank you for your interest in our crypto program. We're excited to have you on board!
           </Text>
@@ -40,8 +39,7 @@ export function WelcomeEmail({ firstName, lastName, email }: WelcomeEmailProps) 
 }
 
 WelcomeEmail.PreviewProps = {
-  firstName: 'John',
-  lastName: 'Doe',
+  fullName: 'John Doe',
   email: 'john.doe@example.com',
 } as WelcomeEmailProps;
 

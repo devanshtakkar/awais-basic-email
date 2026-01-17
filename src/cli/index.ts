@@ -11,7 +11,7 @@ const logger = new Logger('CLI');
 
 // Register templates
 templateService.registerTemplate('welcome', (data) => ({
-  subject: `Welcome, ${data.firstName}!`,
+  subject: `Welcome, ${data.fullName}!`,
   component: WelcomeEmail(data),
 }));
 
@@ -67,7 +67,7 @@ program
       // Display applicants
       logger.section('Applicants to receive email:');
       applicants.forEach((applicant, index) => {
-        logger.info(`  ${index + 1}. ${applicant.first_name} ${applicant.last_name} (${applicant.email})${applicant.country ? ` - ${applicant.country}` : ''}`);
+        logger.info(`  ${index + 1}. ${applicant.full_name} (${applicant.email})${applicant.country ? ` - ${applicant.country}` : ''}`);
       });
 
       if (options.dryRun) {
