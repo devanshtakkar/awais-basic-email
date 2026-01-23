@@ -1,3 +1,4 @@
+import "dotenv/config.js"
 import express, { Request, Response } from 'express';
 import { prisma } from '../lib/prisma.js';
 import { applicantService } from '../services/applicant.service.js';
