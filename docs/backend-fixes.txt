@@ -1,0 +1,4 @@
+@/src/server/index.ts update the endpoint to only skip the applicnts for sending the emails. if for that applicant, an email entry with that particuar template and with a successful email sent is already present.
+
+2nd change.
+when we run the excel import script to send the email to the applicants. in the cli, currently there is no status shown. i want to show that currently which email is being sent and what's the status of that email being sent just like there is logging in the backend. this improves the user experience 
