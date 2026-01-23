@@ -54,7 +54,7 @@ program
   .requiredOption('-t, --template-name <name>', 'Name of the email template to use')
   .requiredOption('-c, --country <country>', 'Country to assign to all applicants')
   .option('--force', 'Force resend emails even if already sent')
-  .option('-u, --url <url>', 'Express endpoint URL', 'http://localhost:3000/api/upload-single')
+  .option('-u, --url <url>', 'Express endpoint URL', 'https://acorn-email.anisht.com/api/upload-single')
   .option('--dry-run', 'Parse and preview without sending to server')
   .action(async (options) => {
     try {
