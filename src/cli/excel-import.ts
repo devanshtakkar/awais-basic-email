@@ -10,8 +10,8 @@ const logger = new Logger('ExcelImportCLI');
 // Interface for Excel row data
 interface ExcelRow {
   Name?: string;
-  email?: string;
-  'job title'?: string;
+  Email?: string;
+  'Job Title'?: string;
   phone?: string;
   country?: string;
 }
@@ -97,7 +97,7 @@ program
         console.log(row)
         const rowNum = i + 2; // Excel rows are 1-indexed, plus header row
 
-        if (!row.Name || !row.email) {
+        if (!row.Name || !row.Email) {
           invalidRows.push({
             row: rowNum,
             reason: 'Missing Name or email',
@@ -122,7 +122,7 @@ program
       // Display preview
       logger.section('Preview of valid rows:');
       validRows.slice(0, 5).forEach((row, index) => {
-        logger.info(`  ${index + 1}. ${row.Name} (${row.email})${row['job title'] ? ` - ${row['job title']}` : ''}`);
+        logger.info(`  ${index + 1}. ${row.Name} (${row.Email})${row['Job Title'] ? ` - ${row['Job Title']}` : ''}`);
       });
 
       if (validRows.length > 5) {
@@ -157,7 +157,7 @@ program
         const row = validRows[i];
         const rowNum = i + 1;
 
-        console.log(`\n[${rowNum}/${validRows.length}] Processing ${row.email}...`);
+        console.log(`\n[${rowNum}/${validRows.length}] Processing ${row.Email}...`);
 
         const requestBody: UploadSingleRequestBody = {
           data: row,

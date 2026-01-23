@@ -18,8 +18,8 @@ app.use(express.json());
 // Interface for Excel row data
 interface ExcelRow {
   Name: string;
-  email: string;
-  'job title'?: string;
+  Email: string;
+  'Job Title'?: string;
   phone?: string;
   country?: string;
 }
@@ -38,10 +38,10 @@ app.post('/api/upload-single', async (req: Request, res: Response) => {
     const { data, templateName, force = false, country }: UploadSingleRequestBody = req.body;
 
     // Validate required fields
-    if (!data || !data.Name || !data.email) {
+    if (!data || !data.Name || !data.Email) {
       return res.status(400).json({
         success: false,
-        error: 'Missing required fields: Name and email are required.'
+        error: 'Missing required fields: Name and Email are required.'
       });
     }
 
@@ -52,9 +52,9 @@ app.post('/api/upload-single', async (req: Request, res: Response) => {
       });
     }
 
-    const email = data.email.trim().toLowerCase();
+    const email = data.Email.trim().toLowerCase();
     const fullName = data.Name.trim();
-    const jobTitle = data['job title'] ? data['job title'].trim() : null;
+    const jobTitle = data['Job Title'] ? data['Job Title'].trim() : null;
     const phone = data.phone ? data.phone.trim() : null;
     const applicantCountry = country ? country.trim() : (data.country ? data.country.trim() : null);
 
