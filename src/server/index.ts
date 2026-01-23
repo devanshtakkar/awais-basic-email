@@ -98,6 +98,24 @@ app.post('/api/upload-single', async (req: Request, res: Response) => {
       action = 'existing';
     }
 
+    // Check if applicant is unsubscribed
+    if (applicant.unsubscribed) {
+      logger.info(`Applicant ${email} is unsubscribed (from: ${applicant.unsubscribedFromEmail}), skipping email`);
+      return res.json({
+        success: true,
+        message: 'Applicant is unsubscribed',
+        applicantId: applicant.id,
+        applicantEmail: applicant.email,
+        action: 'skipped',
+        emailResult: {
+          sent: false,
+          skipped: true,
+          reason: 'unsubscribed',
+          unsubscribedFrom: applicant.unsubscribedFromEmail,
+        },
+      });
+    }
+
     // Check force flag and successful email log
     if (!force) {
       const hasSuccessfulLog = await emailLogsService.hasSuccessfulEmailLog(applicant.id, templateName);
@@ -149,6 +167,85 @@ app.post('/api/upload-single', async (req: Request, res: Response) => {
       error: 'Internal server error',
       message: error instanceof Error ? error.message : String(error),
     });
+  }
+});
+
+// POST /api/unsubscribe/:applicantId - Handle one-click unsubscribe
+app.post('/api/unsubscribe/:applicantId', async (req: Request, res: Response) => {
+  try {
+    const { applicantId } = req.params;
+    const { email: emailTemplate } = req.query;
+
+    if (!applicantId || typeof applicantId !== 'string') {
+      return res.status(400).json({
+        success: false,
+        error: 'Applicant ID is required.'
+      });
+    }
+
+    // Verify applicant exists
+    const applicant = await applicantService.getApplicantById(applicantId);
+    if (!applicant) {
+      return res.status(404).json({
+        success: false,
+        error: 'Applicant not found.'
+      });
+    }
+
+    const success = await applicantService.markAsUnsubscribed(
+      applicantId,
+      typeof emailTemplate === 'string' ? emailTemplate : 'unknown'
+    );
+
+    if (success) {
+      logger.success(`Unsubscribed applicant: ${applicant.email} from email: ${emailTemplate || 'unknown'}`);
+      return res.json({
+        success: true,
+        message: 'You have been successfully unsubscribed.'
+      });
+    } else {
+      return res.status(500).json({
+        success: false,
+        error: 'Failed to process unsubscribe request.'
+      });
+    }
+  } catch (error) {
+    logger.error(`Error processing unsubscribe: ${error instanceof Error ? error.message : String(error)}`);
+    res.status(500).json({
+      success: false,
+      error: 'Internal server error'
+    });
+  }
+});
+
+// GET /api/unsubscribe/:applicantId - For GET requests (fallback)
+app.get('/api/unsubscribe/:applicantId', async (req: Request, res: Response) => {
+  try {
+    const { applicantId } = req.params;
+    const { email: emailTemplate } = req.query;
+
+    if (!applicantId || typeof applicantId !== 'string') {
+      return res.status(400).send('Applicant ID is required.');
+    }
+
+    const applicant = await applicantService.getApplicantById(applicantId);
+    if (!applicant) {
+      return res.status(404).send('Applicant not found.');
+    }
+
+    const success = await applicantService.markAsUnsubscribed(
+      applicantId,
+      typeof emailTemplate === 'string' ? emailTemplate : 'unknown'
+    );
+
+    if (success) {
+      return res.send('You have been successfully unsubscribed.');
+    } else {
+      return res.status(500).send('Failed to process unsubscribe request.');
+    }
+  } catch (error) {
+    logger.error(`Error processing unsubscribe: ${error instanceof Error ? error.message : String(error)}`);
+    res.status(500).send('Internal server error');
   }
 });
 

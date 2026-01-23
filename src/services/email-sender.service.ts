@@ -16,6 +16,10 @@ export class EmailSenderService {
     const { id, email, full_name } = applicant;
 
     try {
+      // Generate unsubscribe URL using applicant ID and template name
+      const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
+      const unsubscribeUrl = `${baseUrl}/api/unsubscribe/${id}?email=${encodeURIComponent(templateName)}`;
+
       // Render template
       const { html, subject } = await templateService.renderTemplate(templateName, {
         fullName: full_name,
@@ -37,6 +41,7 @@ export class EmailSenderService {
         to: email,
         subject,
         html,
+        unsubscribeUrl,
       });
 
       // Log the result

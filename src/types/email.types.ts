@@ -21,6 +21,7 @@ export interface SendEmailOptions {
   to: string;
   subject: string;
   html: string;
+  unsubscribeUrl?: string;
 }
 
 export interface TemplateData {
@@ -39,4 +40,9 @@ export interface RetryConfig {
   maxRetries: number;
   baseDelay: number;
   maxDelay: number;
+}
+
+export interface UnsubscribeResponse {
+  success: boolean;
+  message: string;
 }

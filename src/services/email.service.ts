@@ -26,11 +26,20 @@ export class EmailService {
 
   async sendEmail(options: SendEmailOptions): Promise<EmailSendResult> {
     try {
+      const headers: Record<string, string> = {};
+
+      // Add unsubscribe headers if unsubscribeUrl is provided
+      if (options.unsubscribeUrl) {
+        headers['List-Unsubscribe'] = `<${options.unsubscribeUrl}>`;
+        headers['List-Unsubscribe-Post'] = 'List-Unsubscribe=One-Click';
+      }
+
       const info = await this.transporter.sendMail({
         from: `"${this.fromName}" <${this.fromAddress}>`,
         to: options.to,
         subject: options.subject,
         html: options.html,
+        headers,
       });
 
       emailLogger.success(`Email sent to ${options.to} (Message ID: ${info.messageId})`);

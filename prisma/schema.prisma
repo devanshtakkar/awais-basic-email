@@ -14,13 +14,16 @@ datasource db {
 }
 
 model Applicants {
-  id         String     @id @default(uuid())
-  full_name  String
-  email      String     @unique
-  phone      String?
-  country    String?
-  job_title  String?
-  emailLogs  EmailLogs[]
+  id                    String     @id @default(uuid())
+  full_name             String
+  email                 String     @unique
+  phone                 String?
+  country               String?
+  job_title             String?
+  unsubscribed          Boolean    @default(false)
+  unsubscribedAt        DateTime?
+  unsubscribedFromEmail String?
+  emailLogs             EmailLogs[]
 }
 
 model EmailLogs {

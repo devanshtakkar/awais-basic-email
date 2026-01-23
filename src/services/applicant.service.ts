@@ -69,6 +69,34 @@ export class ApplicantService {
       throw error;
     }
   }
+
+  async markAsUnsubscribed(applicantId: string, emailTemplate: string): Promise<boolean> {
+    try {
+      await prisma.applicants.update({
+        where: { id: applicantId },
+        data: {
+          unsubscribed: true,
+          unsubscribedAt: new Date(),
+          unsubscribedFromEmail: emailTemplate,
+        },
+      });
+      applicantLogger.success(`Applicant '${applicantId}' marked as unsubscribed from '${emailTemplate}'`);
+      return true;
+    } catch (error) {
+      applicantLogger.error(`Failed to mark applicant as unsubscribed: ${error instanceof Error ? error.message : String(error)}`);
+      return false;
+    }
+  }
+
+  async isUnsubscribed(applicantId: string): Promise<boolean> {
+    try {
+      const applicant = await this.getApplicantById(applicantId);
+      return applicant?.unsubscribed ?? false;
+    } catch (error) {
+      applicantLogger.error(`Failed to check unsubscribe status: ${error instanceof Error ? error.message : String(error)}`);
+      return false;
+    }
+  }
 }
 
 export const applicantService = new ApplicantService();
