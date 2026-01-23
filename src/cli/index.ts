@@ -4,7 +4,7 @@ import { applicantService } from '../services/applicant.service.js';
 import { emailSenderService } from '../services/email-sender.service.js';
 import { emailService } from '../services/email.service.js';
 import { templateService } from '../services/template.service.js';
-import { WelcomeEmail } from '../templates/welcome.js';
+import WelcomeEmail from '../templates/welcome.js';
 import { Logger } from '../utils/logger.js';
 
 const logger = new Logger('CLI');

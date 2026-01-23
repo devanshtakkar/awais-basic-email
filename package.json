@@ -14,10 +14,12 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@react-email/preview-server": "^5.2.5",
     "@types/better-sqlite3": "^7.6.13",
     "@types/express": "^5.0.6",
     "@types/node": "^25.0.6",
     "prisma": "^7.2.0",
+    "react-email": "^5.2.5",
     "tsx": "^4.21.0"
   },
   "dependencies": {

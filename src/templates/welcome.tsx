@@ -5,7 +5,7 @@ interface WelcomeEmailProps {
   email: string;
 }
 
-export function WelcomeEmail({ fullName, email }: WelcomeEmailProps) {
+export default function WelcomeEmail({ fullName, email }: WelcomeEmailProps) {
   return (
     <Html>
       <Head />

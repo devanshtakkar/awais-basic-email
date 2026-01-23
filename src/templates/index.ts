@@ -1,5 +1,5 @@
 import { templateService } from '../services/template.service.js';
-import { WelcomeEmail } from './welcome.js';
+import WelcomeEmail from './welcome.js';
 
 /**
  * Register all email templates with the TemplateService
