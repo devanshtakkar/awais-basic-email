@@ -244,23 +244,23 @@ Emails failed: 1
 
 ## Implementation Todo List
 
-1. Add `hasSuccessfulEmailLog()` method to `EmailLogsService` in [`src/services/email-logs.service.ts`](../src/services/email-logs.service.ts)
-2. Remove old `/api/upload` endpoint from [`src/server/index.ts`](../src/server/index.ts)
-3. Create new `/api/upload-single` endpoint in [`src/server/index.ts`](../src/server/index.ts) with:
+1. [x] Add `hasSuccessfulEmailLog()` method to `EmailLogsService` in [`src/services/email-logs.service.ts`](../src/services/email-logs.service.ts)
+2. [x] Remove old `/api/upload` endpoint from [`src/server/index.ts`](../src/server/index.ts)
+3. [x] Create new `/api/upload-single` endpoint in [`src/server/index.ts`](../src/server/index.ts) with:
    - Applicant existence check
    - Country assignment
    - Force flag handling
    - Successful email log check
    - Retry logic (up to 3 attempts)
    - Proper response structure
-4. Update CLI [`src/cli/excel-import.ts`](../src/cli/excel-import.ts):
+4. [x] Update CLI [`src/cli/excel-import.ts`](../src/cli/excel-import.ts):
    - Add `--country` flag (required)
    - Add `--force` flag
    - Remove bulk upload call
    - Implement single applicant upload loop
    - Add real-time progress display with retry status
    - Update summary statistics
-5. Test the implementation with various scenarios:
+5. [ ] Test the implementation with various scenarios:
    - New applicant
    - Existing applicant without email sent
    - Existing applicant with email already sent

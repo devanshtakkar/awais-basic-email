@@ -97,6 +97,22 @@ export class EmailLogsService {
       throw error;
     }
   }
+
+  async hasSuccessfulEmailLog(applicantId: string, templateName: string): Promise<boolean> {
+    try {
+      const log = await prisma.emailLogs.findFirst({
+        where: {
+          applicantId,
+          templateName,
+          status: 'success'
+        }
+      });
+      return log !== null;
+    } catch (error) {
+      emailLogsLogger.error(`Failed to check email log: ${error instanceof Error ? error.message : String(error)}`);
+      throw error;
+    }
+  }
 }
 
 export const emailLogsService = new EmailLogsService();

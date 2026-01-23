@@ -24,79 +24,48 @@ interface ExcelRow {
   country?: string;
 }
 
-// Interface for request body
-interface UploadRequestBody {
-  data: ExcelRow[];
+// Interface for upload-single request body
+interface UploadSingleRequestBody {
+  data: ExcelRow;
   templateName: string;
+  force?: boolean;
+  country?: string;
 }
 
-// POST /api/upload - Upload Excel data and send emails
-app.post('/api/upload', async (req: Request, res: Response) => {
+// POST /api/upload-single - Upload single applicant and send email
+app.post('/api/upload-single', async (req: Request, res: Response) => {
   try {
-    const { data, templateName }: UploadRequestBody = req.body;
+    const { data, templateName, force = false, country }: UploadSingleRequestBody = req.body;
 
-    if (!data || !Array.isArray(data)) {
-      return res.status(400).json({ error: 'Invalid data format. Expected an array of rows.' });
-    }
-
-    if (!templateName) {
-      return res.status(400).json({ error: 'templateName is required.' });
-    }
-
-    logger.section('Processing Excel Upload');
-
-    // Parse and filter applicants
-    const newApplicants: Array<{
-      full_name: string;
-      email: string;
-      job_title?: string | null;
-      phone?: string | null;
-      country?: string | null;
-    }> = [];
-
-    const duplicates: string[] = [];
-    const invalid: Array<{ row: number; reason: string }> = [];
-
-    for (let i = 0; i < data.length; i++) {
-      const row = data[i];
-      const rowNum = i + 1;
-
-      // Validate required fields
-      if (!row.Name || !row.email) {
-        invalid.push({ row: rowNum, reason: 'Missing Name or email' });
-        continue;
-      }
-
-      // Check if applicant already exists (deduplication)
-      const existingApplicant = await applicantService.getApplicantByEmail(row.email);
-      if (existingApplicant) {
-        duplicates.push(row.email);
-        logger.info(`Skipping duplicate: ${row.email}`);
-        continue;
-      }
-
-      // Parse full name, job title, phone, and country
-      const fullName = row.Name.trim();
-      const jobTitle = row['job title'] ? row['job title'].trim() : null;
-      const phone = row.phone ? row.phone.trim() : null;
-      const country = row.country ? row.country.trim() : null;
-
-      newApplicants.push({
-        full_name: fullName,
-        email: row.email.trim().toLowerCase(),
-        job_title: jobTitle,
-        phone: phone,
-        country: country,
+    // Validate required fields
+    if (!data || !data.Name || !data.email) {
+      return res.status(400).json({
+        success: false,
+        error: 'Missing required fields: Name and email are required.'
       });
     }
 
-    logger.info(`Found ${newApplicants.length} new applicants`);
-    logger.info(`Skipped ${duplicates.length} duplicates`);
-    logger.info(`Skipped ${invalid.length} invalid rows`);
+    if (!templateName) {
+      return res.status(400).json({
+        success: false,
+        error: 'templateName is required.'
+      });
+    }
 
-    // Save new applicants to database
-    const createdApplicants = [];
-    for (const applicant of newApplicants) {
+    const email = data.email.trim().toLowerCase();
+    const fullName = data.Name.trim();
+    const jobTitle = data['job title'] ? data['job title'].trim() : null;
+    const phone = data.phone ? data.phone.trim() : null;
+    const applicantCountry = country ? country.trim() : (data.country ? data.country.trim() : null);
+
+    logger.info(`Processing upload-single for ${email} (force: ${force})`);
+
+    // Check if applicant exists by email
+    let applicant = await applicantService.getApplicantByEmail(email);
+    let action: 'created' | 'existing' | 'skipped';
+
+    if (!applicant) {
+      // Create new applicant
       const createData: {
         full_name: string;
         email: string;
@@ -104,58 +73,79 @@ app.post('/api/upload', async (req: Request, res: Response) => {
         phone?: string | null;
         country?: string | null;
       } = {
-        full_name: applicant.full_name,
-        email: applicant.email,
+        full_name: fullName,
+        email: email,
       };
 
-      if (applicant.job_title !== undefined) {
-        createData.job_title = applicant.job_title;
+      if (jobTitle !== undefined) {
+        createData.job_title = jobTitle;
       }
-      if (applicant.phone !== undefined) {
-        createData.phone = applicant.phone;
+      if (phone !== undefined) {
+        createData.phone = phone;
       }
-      if (applicant.country !== undefined) {
-        createData.country = applicant.country;
+      if (applicantCountry !== undefined) {
+        createData.country = applicantCountry;
       }
 
-      const created = await prisma.applicants.create({
+      applicant = await prisma.applicants.create({
         data: createData,
       });
-      createdApplicants.push(created);
+
+      logger.success(`Created new applicant: ${email}`);
+      action = 'created';
+    } else {
+      logger.info(`Using existing applicant: ${email}`);
+      action = 'existing';
     }
 
-    logger.success(`Saved ${createdApplicants.length} applicants to database`);
+    // Check force flag and successful email log
+    if (!force) {
+      const hasSuccessfulLog = await emailLogsService.hasSuccessfulEmailLog(applicant.id, templateName);
+      if (hasSuccessfulLog) {
+        logger.info(`Email already sent to ${email} with template '${templateName}', skipping`);
+        return res.json({
+          success: true,
+          message: 'Email already sent',
+          applicantId: applicant.id,
+          applicantEmail: applicant.email,
+          action: 'skipped',
+          emailResult: {
+            sent: false,
+            skipped: true,
+            reason: 'already sent',
+          },
+        });
+      }
+    }
 
-    // Send emails to new applicants
-    const emailResults = await emailSenderService.sendEmailsToApplicants(
-      createdApplicants,
-      templateName,
-      false
-    );
+    // Send email with retry logic
+    const emailResult = await emailSenderService.sendEmailToApplicant(applicant, templateName, false);
 
-    // Print summary
-    await emailSenderService.printSummary(emailResults);
-
-    // Return response
-    res.json({
-      success: true,
-      message: 'Excel data processed successfully',
-      stats: {
-        totalRows: data.length,
-        newApplicants: createdApplicants.length,
-        duplicates: duplicates.length,
-        invalid: invalid.length,
+    const response = {
+      success: emailResult.success,
+      message: emailResult.success ? 'Email sent successfully' : 'Email failed',
+      applicantId: applicant.id,
+      applicantEmail: applicant.email,
+      action,
+      emailResult: {
+        sent: emailResult.success,
+        skipped: false,
+        retryCount: emailResult.success ? 0 : 3,
+        errorMessage: emailResult.errorMessage,
       },
-      duplicates,
-      invalid,
-      emailResults: {
-        sent: emailResults.filter((r) => r.success).length,
-        failed: emailResults.filter((r) => !r.success).length,
-      },
-    });
+    };
+
+    if (emailResult.success) {
+      logger.success(`Email sent successfully to ${email}`);
+    } else {
+      logger.error(`Email failed for ${email}: ${emailResult.errorMessage}`);
+    }
+
+    res.json(response);
   } catch (error) {
-    logger.error(`Error processing upload: ${error instanceof Error ? error.message : String(error)}`);
+    logger.error(`Error processing upload-single: ${error instanceof Error ? error.message : String(error)}`);
     res.status(500).json({
+      success: false,
       error: 'Internal server error',
       message: error instanceof Error ? error.message : String(error),
     });
@@ -171,7 +161,7 @@ app.get('/api/health', (req: Request, res: Response) => {
 app.listen(PORT, () => {
   logger.success(`Express server running on port ${PORT}`);
   logger.info(`Health check: http://localhost:${PORT}/api/health`);
-  logger.info(`Upload endpoint: http://localhost:${PORT}/api/upload`);
+  logger.info(`Upload endpoint: http://localhost:${PORT}/api/upload-single`);
 });
 
 export { app };

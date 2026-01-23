@@ -12,12 +12,32 @@ interface ExcelRow {
   Name?: string;
   email?: string;
   'job title'?: string;
+  phone?: string;
+  country?: string;
 }
 
-// Interface for upload request body
-interface UploadRequestBody {
-  data: ExcelRow[];
+// Interface for upload-single request body
+interface UploadSingleRequestBody {
+  data: ExcelRow;
   templateName: string;
+  force?: boolean;
+  country?: string;
+}
+
+// Interface for upload-single response
+interface UploadSingleResponse {
+  success: boolean;
+  message: string;
+  applicantId: string;
+  applicantEmail: string;
+  action: 'created' | 'existing' | 'skipped';
+  emailResult: {
+    sent: boolean;
+    skipped: boolean;
+    reason?: string;
+    retryCount?: number;
+    errorMessage?: string;
+  };
 }
 
 const program = new Command();
@@ -32,7 +52,9 @@ program
   .description('Process Excel file and send data to Express endpoint')
   .requiredOption('-f, --file <path>', 'Path to Excel file')
   .requiredOption('-t, --template-name <name>', 'Name of the email template to use')
-  .option('-u, --url <url>', 'Express endpoint URL', 'http://localhost:3000/api/upload')
+  .requiredOption('-c, --country <country>', 'Country to assign to all applicants')
+  .option('--force', 'Force resend emails even if already sent')
+  .option('-u, --url <url>', 'Express endpoint URL', 'http://localhost:3000/api/upload-single')
   .option('--dry-run', 'Parse and preview without sending to server')
   .action(async (options) => {
     try {
@@ -72,6 +94,7 @@ program
 
       for (let i = 0; i < rawData.length; i++) {
         const row = rawData[i];
+        console.log(row)
         const rowNum = i + 2; // Excel rows are 1-indexed, plus header row
 
         if (!row.Name || !row.email) {
@@ -94,6 +117,8 @@ program
         });
       }
 
+      logger.info(`Country: ${options.country}`);
+
       // Display preview
       logger.section('Preview of valid rows:');
       validRows.slice(0, 5).forEach((row, index) => {
@@ -107,6 +132,8 @@ program
       if (options.dryRun) {
         logger.section('Dry Run Mode - No data will be sent to server');
         logger.info(`Template: ${options.templateName}`);
+        logger.info(`Country: ${options.country}`);
+        logger.info(`Force: ${options.force ? 'true' : 'false'}`);
         logger.info(`Valid rows to process: ${validRows.length}`);
         process.exit(0);
       }
@@ -115,54 +142,96 @@ program
       logger.section('Sending data to Express endpoint');
       logger.info(`URL: ${options.url}`);
       logger.info(`Template: ${options.templateName}`);
+      logger.info(`Country: ${options.country}`);
+      logger.info(`Force: ${options.force ? 'true' : 'false'}`);
 
-      const requestBody: UploadRequestBody = {
-        data: validRows,
-        templateName: options.templateName,
-      };
+      // Statistics
+      let newApplicants = 0;
+      let existingApplicants = 0;
+      let emailsSent = 0;
+      let emailsSkipped = 0;
+      let emailsFailed = 0;
 
-      const response = await fetch(options.url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(requestBody),
-      });
+      // Process each applicant individually
+      for (let i = 0; i < validRows.length; i++) {
+        const row = validRows[i];
+        const rowNum = i + 1;
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        logger.error(`Server returned error (${response.status}): ${errorText}`);
-        process.exit(1);
+        console.log(`\n[${rowNum}/${validRows.length}] Processing ${row.email}...`);
+
+        const requestBody: UploadSingleRequestBody = {
+          data: row,
+          templateName: options.templateName,
+          force: options.force,
+          country: options.country,
+        };
+
+        try {
+          const response = await fetch(options.url, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestBody),
+          });
+
+          if (!response.ok) {
+            const errorText = await response.text();
+            console.log(`  ✗ Server error: ${errorText}`);
+            emailsFailed++;
+            continue;
+          }
+
+          const result: UploadSingleResponse = await response.json();
+
+          // Display action result
+          if (result.action === 'created') {
+            console.log(`  ✓ Applicant created`);
+            newApplicants++;
+          } else if (result.action === 'existing') {
+            console.log(`  ℹ Applicant already exists`);
+            existingApplicants++;
+          } else if (result.action === 'skipped') {
+            console.log(`  ⊘ Email skipped (${result.emailResult.reason})`);
+            emailsSkipped++;
+            continue;
+          }
+
+          // Display email result
+          if (result.emailResult.sent) {
+            const forceMsg = options.force ? ' (force resend)' : '';
+            console.log(`  ✓ Email sent successfully${forceMsg}`);
+            emailsSent++;
+          } else if (result.emailResult.skipped) {
+            console.log(`  ⊘ Email skipped (${result.emailResult.reason})`);
+            emailsSkipped++;
+          } else {
+            console.log(`  ✗ Email failed: ${result.emailResult.errorMessage || 'Unknown error'}`);
+            if (result.emailResult.retryCount && result.emailResult.retryCount > 0) {
+              console.log(`  ↻ Retried ${result.emailResult.retryCount} time(s)`);
+            }
+            emailsFailed++;
+          }
+        } catch (error) {
+          console.log(`  ✗ Request failed: ${error instanceof Error ? error.message : String(error)}`);
+          emailsFailed++;
+        }
       }
 
-      const result = await response.json();
-
-      logger.section('Server Response');
-      logger.info(`Total rows: ${result.stats.totalRows}`);
-      logger.success(`New applicants: ${result.stats.newApplicants}`);
-      logger.info(`Duplicates skipped: ${result.stats.duplicates}`);
-      logger.info(`Invalid rows: ${result.stats.invalid}`);
-      logger.success(`Emails sent: ${result.emailResults.sent}`);
-      if (result.emailResults.failed > 0) {
-        logger.error(`Emails failed: ${result.emailResults.failed}`);
-      }
-
-      if (result.duplicates.length > 0) {
-        logger.section('Duplicate emails:');
-        result.duplicates.forEach((email: string) => {
-          logger.info(`  - ${email}`);
-        });
-      }
-
-      if (result.invalid.length > 0) {
-        logger.section('Invalid rows from server:');
-        result.invalid.forEach((inv: any) => {
-          logger.warn(`  Row ${inv.row}: ${inv.reason}`);
-        });
+      // Print summary
+      logger.section('Server Response Summary');
+      logger.info(`Total rows: ${validRows.length}`);
+      logger.success(`New applicants: ${newApplicants}`);
+      logger.info(`Existing applicants: ${existingApplicants}`);
+      logger.info(`Invalid rows: ${invalidRows.length}`);
+      logger.success(`Emails sent: ${emailsSent}`);
+      logger.info(`Emails skipped: ${emailsSkipped}`);
+      if (emailsFailed > 0) {
+        logger.error(`Emails failed: ${emailsFailed}`);
       }
 
       // Exit with error if any emails failed
-      if (result.emailResults.failed > 0) {
+      if (emailsFailed > 0) {
         process.exit(1);
       }
 
