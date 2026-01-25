@@ -1,168 +1,173 @@
-# Crypto Email CLI
+# Acorn Email System
 
-A CLI tool for sending emails to applicants using nodemailer and React Email templates.
+A complete email dispatch system with open/click tracking, unsubscribe handling, and Excel import functionality.
 
 ## Features
 
-- Send emails to applicants stored in the database
-- Import applicants from Excel files
-- Deduplication - skip emails already sent
-- Select email templates by name
-- Filter applicants by country
-- Dry-run mode for testing
-- Automatic retry logic (up to 3 retries) for failed emails
-- Email logging to track all sent emails
-- One applicant can receive multiple emails
+- **Email Sending** - Send emails to applicants using React Email templates
+- **Open Tracking** - 1x1 pixel tracking to detect when emails are opened
+- **Click Tracking** - Track when recipients click links in emails
+- **Unsubscribe Handling** - One-click unsubscribe support (RFC 8058)
+- **Excel Import** - Bulk import applicants from Excel files
+- **Deduplication** - Prevent duplicate emails to the same recipient
+- **Retry Logic** - Automatic retry (up to 3 attempts) for failed emails
+- **Email Logging** - Complete audit trail of all sent emails
 
-## Installation
+## Quick Start
 
-1. Install dependencies:
+### 1. Install Dependencies
 ```bash
 npm install
 ```
 
-2. Set up environment variables:
+### 2. Configure Environment
 ```bash
 cp .env.example .env
 ```
 
-Edit `.env` and configure your SMTP settings:
+Edit `.env` with your settings:
 ```env
 DATABASE_URL="file:./dev.db"
+PORT=3003
+
+# SMTP Configuration
 SMTP_HOST="smtp.example.com"
 SMTP_PORT="587"
 SMTP_SECURE="false"
 SMTP_USER="your-email@example.com"
 SMTP_PASSWORD="your-password"
 SMTP_FROM="noreply@example.com"
-SMTP_FROM_NAME="Crypto Email"
+SMTP_FROM_NAME="Acorn Email"
+
+# URLs (use your production domain)
+BASE_URL="https://acorn-email.anisht.com"
+TRACKING_BASE_URL="https://acorn-email.anisht.com"
+TRACKING_CLICK_SUBDOMAIN="https://acorn-email.anisht.com"
 ```
 
-3. Run database migrations:
+### 3. Setup Database
 ```bash
-npx prisma migrate dev --name init
+npx prisma migrate dev
+npx prisma generate
 ```
 
-4. (Optional) Seed test applicants:
-```bash
-npx tsx scripts/seed-applicants.ts
-```
-
-## Usage
-
-### Send emails to applicants
-
-```bash
-npm run send-emails -- send -l <limit> -t <template-name> [options]
-```
-
-### Options
-
-| Option | Short | Description | Required |
-|--------|-------|-------------|----------|
-| `--limit` | `-l` | Maximum number of applicants to send emails to | Yes |
-| `--template-name` | `-t` | Name of the email template to use | Yes |
-| `--country` | `-c` | Filter applicants by country (optional) | No |
-| `--dry-run` | N/A | Preview without sending actual emails | No |
-
-### Examples
-
-Send emails to first 10 applicants:
-```bash
-npm run send-emails -- send -l 10 -t welcome
-```
-
-Send emails to first 5 applicants from Canada:
-```bash
-npm run send-emails -- send -l 5 -t welcome -c Canada
-```
-
-Dry run to preview:
-```bash
-npm run send-emails -- send -l 10 -t welcome --dry-run
-```
-
-### Import from Excel
-
-```bash
-npm run excel-import -- process -f <excel-file-path> -t <template-name> [options]
-```
-
-#### Options
-
-| Option | Short | Description | Required |
-|--------|-------|-------------|----------|
-| `--file` | `-f` | Path to Excel file | Yes |
-| `--template-name` | `-t` | Name of the email template to use | Yes |
-| `--url` | `-u` | Express endpoint URL (default: http://localhost:3000/api/upload) | No |
-| `--dry-run` | N/A | Preview without sending to server | No |
-
-#### Excel File Format
-
-The Excel file should have the following columns:
-
-| Column | Required | Description |
-|--------|----------|-------------|
-| Name | Yes | First name of the applicant |
-| email | Yes | Email address |
-| job title | No | Job title (can be empty) |
-
-#### Examples
-
-Create a sample Excel file:
-```bash
-npm run create-sample-excel
-```
-
-Preview Excel file (dry run):
-```bash
-npm run excel-import -- process -f sheets/sample-applicants.xlsx -t welcome --dry-run
-```
-
-Import from Excel and send emails:
-```bash
-npm run excel-import -- process -f sheets/sample-applicants.xlsx -t welcome
-```
-
-#### Running the Express Server
-
-Before importing from Excel, make sure the Express server is running:
-
+### 4. Start the Server
 ```bash
 npm run server
 ```
 
-The server will start on port 3000 (or the PORT specified in your .env file).
+## API Endpoints
 
-#### Deduplication
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/health` | GET | Health check |
+| `/api/upload-single` | POST | Upload applicant and send email |
+| `/api/unsubscribe/:applicantId` | GET/POST | Handle unsubscribe |
+| `/t/open/:emailLogId.png` | GET | Open tracking pixel |
+| `/c/:emailLogId?url=<url>` | GET | Click tracking redirect |
+| `/api/tracking/stats` | GET | Get overall tracking stats |
+| `/api/tracking/:emailLogId` | GET | Get tracking for specific email |
 
-The system automatically checks if an applicant with the same email already exists in the database. If found, that applicant is skipped and not sent an email again. This prevents duplicate emails to the same person.
+## CLI Commands
 
-## Available Templates
+### Send Emails
+```bash
+npm run send-emails -- send -l <limit> -t <template> [-c <country>] [--dry-run]
+```
 
-Currently available templates:
-- `welcome` - Welcome email for new applicants
+**Options:**
+| Option | Description |
+|--------|-------------|
+| `-l, --limit` | Max number of applicants |
+| `-t, --template-name` | Template name (e.g., `welcome`) |
+| `-c, --country` | Filter by country (optional) |
+| `--dry-run` | Preview without sending |
+
+**Examples:**
+```bash
+# Send to 10 applicants
+npm run send-emails -- send -l 10 -t welcome
+
+# Send to USA applicants only
+npm run send-emails -- send -l 5 -t welcome -c USA
+
+# Preview without sending
+npm run send-emails -- send -l 10 -t welcome --dry-run
+```
+
+### Import from Excel
+```bash
+npm run excel-import -- process -f <file> -t <template> [-c <country>] [--dry-run]
+```
+
+**Options:**
+| Option | Description |
+|--------|-------------|
+| `-f, --file` | Path to Excel file |
+| `-t, --template-name` | Template name |
+| `-c, --country` | Country to assign |
+| `--dry-run` | Preview without sending |
+
+**Examples:**
+```bash
+# Import and send emails
+npm run excel-import -- process -f sheets/data.xlsx -t welcome -c USA
+
+# Preview import
+npm run excel-import -- process -f sheets/data.xlsx -t welcome --dry-run
+```
+
+### Excel File Format
+
+| Column | Required | Description |
+|--------|----------|-------------|
+| Name | Yes | Full name |
+| Email | Yes | Email address |
+| Job Title | No | Job title |
+| phone | No | Phone number |
+| country | Yes | Country |
+
+## Project Structure
+
+```
+awais-basic-email/
+├── src/
+│   ├── cli/                 # CLI commands
+│   ├── server/              # Express server
+│   ├── services/            # Business logic
+│   │   ├── applicant.service.ts
+│   │   ├── email.service.ts
+│   │   ├── email-sender.service.ts
+│   │   ├── email-logs.service.ts
+│   │   ├── template.service.ts
+│   │   └── tracking.service.ts
+│   ├── templates/           # React Email templates
+│   ├── types/               # TypeScript types
+│   ├── utils/               # Utilities (logger)
+│   └── lib/                 # Prisma client
+├── prisma/                  # Database schema & migrations
+├── scripts/                 # Helper scripts
+├── sheets/                  # Excel data files
+└── package.json
+```
 
 ## Adding New Templates
 
-1. Create a new template file in `src/templates/`:
+1. Create template in `src/templates/`:
 ```tsx
-// src/templates/my-template.tsx
-import { Body, Container, Head, Html, Text } from '@react-email/components';
+import { Body, Container, Html, Text } from '@react-email/components';
 
-interface MyTemplateProps {
-  firstName: string;
-  lastName: string;
+interface Props {
+  fullName: string;
   email: string;
 }
 
-export function MyTemplate({ firstName, lastName, email }: MyTemplateProps) {
+export function MyTemplate({ fullName, email }: Props) {
   return (
     <Html>
-      <Head />
       <Body>
         <Container>
-          <Text>Hello {firstName}!</Text>
+          <Text>Hello {fullName}!</Text>
         </Container>
       </Body>
     </Html>
@@ -170,83 +175,39 @@ export function MyTemplate({ firstName, lastName, email }: MyTemplateProps) {
 }
 ```
 
-2. Register the template in `src/cli/index.ts`:
+2. Register in `src/templates/index.ts`:
 ```typescript
-import { MyTemplate } from '../templates/my-template.js';
-
 templateService.registerTemplate('my-template', (data) => ({
-  subject: `Hello, ${data.firstName}!`,
+  subject: `Hello, ${data.fullName}!`,
   component: MyTemplate(data),
 }));
 ```
 
-## Database Schema
+## Database Models
 
 ### Applicants
-```prisma
-model Applicants {
-  id         String     @id @default(uuid())
-  first_name String
-  last_name  String?
-  email      String     @unique
-  phone      String?
-  country    String?
-  job_title  String?
-  emailLogs  EmailLogs[]
-}
-```
+- `id` - UUID
+- `full_name` - Full name
+- `email` - Unique email address
+- `phone` - Phone number
+- `country` - Country
+- `job_title` - Job title
+- `unsubscribed` - Unsubscribe status
+- `unsubscribedAt` - Unsubscribe timestamp
+- `unsubscribedFromEmail` - Which email triggered unsubscribe
 
 ### EmailLogs
-```prisma
-model EmailLogs {
-  id            String     @id @default(uuid())
-  applicantId   String
-  applicant     Applicants @relation(fields: [applicantId], references: [id], onDelete: Cascade)
-  templateName  String
-  sentAt        DateTime   @default(now())
-  status        String     // 'success' | 'failed'
-  errorMessage  String?
-  emailSubject  String
-  emailBody     String
-  retryCount    Int        @default(0)
-}
-```
-
-## Project Structure
-
-```
-crypto-email/
-├── prisma/
-│   └── schema.prisma
-├── src/
-│   ├── cli/
-│   │   ├── index.ts           # CLI entry point for sending emails
-│   │   └── excel-import.ts     # CLI entry point for Excel import
-│   ├── server/
-│   │   └── index.ts            # Express server for receiving Excel data
-│   ├── services/
-│   │   ├── applicant.service.ts
-│   │   ├── email.service.ts   # Nodemailer configuration
-│   │   ├── template.service.ts # React Email rendering
-│   │   ├── email-logs.service.ts
-│   │   └── email-sender.service.ts
-│   ├── templates/
-│   │   └── welcome.tsx        # React Email components
-│   ├── types/
-│   │   └── email.types.ts
-│   ├── utils/
-│   │   └── logger.ts
-│   └── lib/
-│       └── prisma.ts
-├── sheets/
-│   └── sample-applicants.xlsx # Sample Excel file
-├── scripts/
-│   ├── seed-applicants.ts
-│   └── create-sample-excel.ts
-├── .env
-├── .env.example
-└── package.json
-```
+- `id` - UUID
+- `applicantId` - Reference to applicant
+- `templateName` - Template used
+- `status` - success/failed/pending
+- `emailSubject` - Subject line
+- `emailBody` - HTML content
+- `openedAt` - First open timestamp
+- `openCount` - Total opens
+- `clickedAt` - First click timestamp
+- `clickCount` - Total clicks
+- `clickedUrl` - Last clicked URL
 
 ## License
 
