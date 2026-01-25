@@ -28,10 +28,14 @@ export type AggregateEmailLogs = {
 
 export type EmailLogsAvgAggregateOutputType = {
   retryCount: number | null
+  openCount: number | null
+  clickCount: number | null
 }
 
 export type EmailLogsSumAggregateOutputType = {
   retryCount: number | null
+  openCount: number | null
+  clickCount: number | null
 }
 
 export type EmailLogsMinAggregateOutputType = {
@@ -44,6 +48,17 @@ export type EmailLogsMinAggregateOutputType = {
   emailSubject: string | null
   emailBody: string | null
   retryCount: number | null
+  openedAt: Date | null
+  openCount: number | null
+  lastOpenedAt: Date | null
+  openedFromIp: string | null
+  openedFromUserAgent: string | null
+  clickedAt: Date | null
+  clickCount: number | null
+  lastClickedAt: Date | null
+  clickedUrl: string | null
+  clickedFromIp: string | null
+  clickedFromUserAgent: string | null
 }
 
 export type EmailLogsMaxAggregateOutputType = {
@@ -56,6 +71,17 @@ export type EmailLogsMaxAggregateOutputType = {
   emailSubject: string | null
   emailBody: string | null
   retryCount: number | null
+  openedAt: Date | null
+  openCount: number | null
+  lastOpenedAt: Date | null
+  openedFromIp: string | null
+  openedFromUserAgent: string | null
+  clickedAt: Date | null
+  clickCount: number | null
+  lastClickedAt: Date | null
+  clickedUrl: string | null
+  clickedFromIp: string | null
+  clickedFromUserAgent: string | null
 }
 
 export type EmailLogsCountAggregateOutputType = {
@@ -68,16 +94,31 @@ export type EmailLogsCountAggregateOutputType = {
   emailSubject: number
   emailBody: number
   retryCount: number
+  openedAt: number
+  openCount: number
+  lastOpenedAt: number
+  openedFromIp: number
+  openedFromUserAgent: number
+  clickedAt: number
+  clickCount: number
+  lastClickedAt: number
+  clickedUrl: number
+  clickedFromIp: number
+  clickedFromUserAgent: number
   _all: number
 }
 
 
 export type EmailLogsAvgAggregateInputType = {
   retryCount?: true
+  openCount?: true
+  clickCount?: true
 }
 
 export type EmailLogsSumAggregateInputType = {
   retryCount?: true
+  openCount?: true
+  clickCount?: true
 }
 
 export type EmailLogsMinAggregateInputType = {
@@ -90,6 +131,17 @@ export type EmailLogsMinAggregateInputType = {
   emailSubject?: true
   emailBody?: true
   retryCount?: true
+  openedAt?: true
+  openCount?: true
+  lastOpenedAt?: true
+  openedFromIp?: true
+  openedFromUserAgent?: true
+  clickedAt?: true
+  clickCount?: true
+  lastClickedAt?: true
+  clickedUrl?: true
+  clickedFromIp?: true
+  clickedFromUserAgent?: true
 }
 
 export type EmailLogsMaxAggregateInputType = {
@@ -102,6 +154,17 @@ export type EmailLogsMaxAggregateInputType = {
   emailSubject?: true
   emailBody?: true
   retryCount?: true
+  openedAt?: true
+  openCount?: true
+  lastOpenedAt?: true
+  openedFromIp?: true
+  openedFromUserAgent?: true
+  clickedAt?: true
+  clickCount?: true
+  lastClickedAt?: true
+  clickedUrl?: true
+  clickedFromIp?: true
+  clickedFromUserAgent?: true
 }
 
 export type EmailLogsCountAggregateInputType = {
@@ -114,6 +177,17 @@ export type EmailLogsCountAggregateInputType = {
   emailSubject?: true
   emailBody?: true
   retryCount?: true
+  openedAt?: true
+  openCount?: true
+  lastOpenedAt?: true
+  openedFromIp?: true
+  openedFromUserAgent?: true
+  clickedAt?: true
+  clickCount?: true
+  lastClickedAt?: true
+  clickedUrl?: true
+  clickedFromIp?: true
+  clickedFromUserAgent?: true
   _all?: true
 }
 
@@ -213,6 +287,17 @@ export type EmailLogsGroupByOutputType = {
   emailSubject: string
   emailBody: string
   retryCount: number
+  openedAt: Date | null
+  openCount: number
+  lastOpenedAt: Date | null
+  openedFromIp: string | null
+  openedFromUserAgent: string | null
+  clickedAt: Date | null
+  clickCount: number
+  lastClickedAt: Date | null
+  clickedUrl: string | null
+  clickedFromIp: string | null
+  clickedFromUserAgent: string | null
   _count: EmailLogsCountAggregateOutputType | null
   _avg: EmailLogsAvgAggregateOutputType | null
   _sum: EmailLogsSumAggregateOutputType | null
@@ -248,6 +333,17 @@ export type EmailLogsWhereInput = {
   emailSubject?: Prisma.StringFilter<"EmailLogs"> | string
   emailBody?: Prisma.StringFilter<"EmailLogs"> | string
   retryCount?: Prisma.IntFilter<"EmailLogs"> | number
+  openedAt?: Prisma.DateTimeNullableFilter<"EmailLogs"> | Date | string | null
+  openCount?: Prisma.IntFilter<"EmailLogs"> | number
+  lastOpenedAt?: Prisma.DateTimeNullableFilter<"EmailLogs"> | Date | string | null
+  openedFromIp?: Prisma.StringNullableFilter<"EmailLogs"> | string | null
+  openedFromUserAgent?: Prisma.StringNullableFilter<"EmailLogs"> | string | null
+  clickedAt?: Prisma.DateTimeNullableFilter<"EmailLogs"> | Date | string | null
+  clickCount?: Prisma.IntFilter<"EmailLogs"> | number
+  lastClickedAt?: Prisma.DateTimeNullableFilter<"EmailLogs"> | Date | string | null
+  clickedUrl?: Prisma.StringNullableFilter<"EmailLogs"> | string | null
+  clickedFromIp?: Prisma.StringNullableFilter<"EmailLogs"> | string | null
+  clickedFromUserAgent?: Prisma.StringNullableFilter<"EmailLogs"> | string | null
   applicant?: Prisma.XOR<Prisma.ApplicantsScalarRelationFilter, Prisma.ApplicantsWhereInput>
 }
 
@@ -261,6 +357,17 @@ export type EmailLogsOrderByWithRelationInput = {
   emailSubject?: Prisma.SortOrder
   emailBody?: Prisma.SortOrder
   retryCount?: Prisma.SortOrder
+  openedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  openCount?: Prisma.SortOrder
+  lastOpenedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  openedFromIp?: Prisma.SortOrderInput | Prisma.SortOrder
+  openedFromUserAgent?: Prisma.SortOrderInput | Prisma.SortOrder
+  clickedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  clickCount?: Prisma.SortOrder
+  lastClickedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  clickedUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  clickedFromIp?: Prisma.SortOrderInput | Prisma.SortOrder
+  clickedFromUserAgent?: Prisma.SortOrderInput | Prisma.SortOrder
   applicant?: Prisma.ApplicantsOrderByWithRelationInput
 }
 
@@ -277,6 +384,17 @@ export type EmailLogsWhereUniqueInput = Prisma.AtLeast<{
   emailSubject?: Prisma.StringFilter<"EmailLogs"> | string
   emailBody?: Prisma.StringFilter<"EmailLogs"> | string
   retryCount?: Prisma.IntFilter<"EmailLogs"> | number
+  openedAt?: Prisma.DateTimeNullableFilter<"EmailLogs"> | Date | string | null
+  openCount?: Prisma.IntFilter<"EmailLogs"> | number
+  lastOpenedAt?: Prisma.DateTimeNullableFilter<"EmailLogs"> | Date | string | null
+  openedFromIp?: Prisma.StringNullableFilter<"EmailLogs"> | string | null
+  openedFromUserAgent?: Prisma.StringNullableFilter<"EmailLogs"> | string | null
+  clickedAt?: Prisma.DateTimeNullableFilter<"EmailLogs"> | Date | string | null
+  clickCount?: Prisma.IntFilter<"EmailLogs"> | number
+  lastClickedAt?: Prisma.DateTimeNullableFilter<"EmailLogs"> | Date | string | null
+  clickedUrl?: Prisma.StringNullableFilter<"EmailLogs"> | string | null
+  clickedFromIp?: Prisma.StringNullableFilter<"EmailLogs"> | string | null
+  clickedFromUserAgent?: Prisma.StringNullableFilter<"EmailLogs"> | string | null
   applicant?: Prisma.XOR<Prisma.ApplicantsScalarRelationFilter, Prisma.ApplicantsWhereInput>
 }, "id">
 
@@ -290,6 +408,17 @@ export type EmailLogsOrderByWithAggregationInput = {
   emailSubject?: Prisma.SortOrder
   emailBody?: Prisma.SortOrder
   retryCount?: Prisma.SortOrder
+  openedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  openCount?: Prisma.SortOrder
+  lastOpenedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  openedFromIp?: Prisma.SortOrderInput | Prisma.SortOrder
+  openedFromUserAgent?: Prisma.SortOrderInput | Prisma.SortOrder
+  clickedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  clickCount?: Prisma.SortOrder
+  lastClickedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  clickedUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  clickedFromIp?: Prisma.SortOrderInput | Prisma.SortOrder
+  clickedFromUserAgent?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.EmailLogsCountOrderByAggregateInput
   _avg?: Prisma.EmailLogsAvgOrderByAggregateInput
   _max?: Prisma.EmailLogsMaxOrderByAggregateInput
@@ -310,6 +439,17 @@ export type EmailLogsScalarWhereWithAggregatesInput = {
   emailSubject?: Prisma.StringWithAggregatesFilter<"EmailLogs"> | string
   emailBody?: Prisma.StringWithAggregatesFilter<"EmailLogs"> | string
   retryCount?: Prisma.IntWithAggregatesFilter<"EmailLogs"> | number
+  openedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"EmailLogs"> | Date | string | null
+  openCount?: Prisma.IntWithAggregatesFilter<"EmailLogs"> | number
+  lastOpenedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"EmailLogs"> | Date | string | null
+  openedFromIp?: Prisma.StringNullableWithAggregatesFilter<"EmailLogs"> | string | null
+  openedFromUserAgent?: Prisma.StringNullableWithAggregatesFilter<"EmailLogs"> | string | null
+  clickedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"EmailLogs"> | Date | string | null
+  clickCount?: Prisma.IntWithAggregatesFilter<"EmailLogs"> | number
+  lastClickedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"EmailLogs"> | Date | string | null
+  clickedUrl?: Prisma.StringNullableWithAggregatesFilter<"EmailLogs"> | string | null
+  clickedFromIp?: Prisma.StringNullableWithAggregatesFilter<"EmailLogs"> | string | null
+  clickedFromUserAgent?: Prisma.StringNullableWithAggregatesFilter<"EmailLogs"> | string | null
 }
 
 export type EmailLogsCreateInput = {
@@ -321,6 +461,17 @@ export type EmailLogsCreateInput = {
   emailSubject: string
   emailBody: string
   retryCount?: number
+  openedAt?: Date | string | null
+  openCount?: number
+  lastOpenedAt?: Date | string | null
+  openedFromIp?: string | null
+  openedFromUserAgent?: string | null
+  clickedAt?: Date | string | null
+  clickCount?: number
+  lastClickedAt?: Date | string | null
+  clickedUrl?: string | null
+  clickedFromIp?: string | null
+  clickedFromUserAgent?: string | null
   applicant: Prisma.ApplicantsCreateNestedOneWithoutEmailLogsInput
 }
 
@@ -334,6 +485,17 @@ export type EmailLogsUncheckedCreateInput = {
   emailSubject: string
   emailBody: string
   retryCount?: number
+  openedAt?: Date | string | null
+  openCount?: number
+  lastOpenedAt?: Date | string | null
+  openedFromIp?: string | null
+  openedFromUserAgent?: string | null
+  clickedAt?: Date | string | null
+  clickCount?: number
+  lastClickedAt?: Date | string | null
+  clickedUrl?: string | null
+  clickedFromIp?: string | null
+  clickedFromUserAgent?: string | null
 }
 
 export type EmailLogsUpdateInput = {
@@ -345,6 +507,17 @@ export type EmailLogsUpdateInput = {
   emailSubject?: Prisma.StringFieldUpdateOperationsInput | string
   emailBody?: Prisma.StringFieldUpdateOperationsInput | string
   retryCount?: Prisma.IntFieldUpdateOperationsInput | number
+  openedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  openCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastOpenedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  openedFromIp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  openedFromUserAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clickedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  clickCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastClickedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  clickedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clickedFromIp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clickedFromUserAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   applicant?: Prisma.ApplicantsUpdateOneRequiredWithoutEmailLogsNestedInput
 }
 
@@ -358,6 +531,17 @@ export type EmailLogsUncheckedUpdateInput = {
   emailSubject?: Prisma.StringFieldUpdateOperationsInput | string
   emailBody?: Prisma.StringFieldUpdateOperationsInput | string
   retryCount?: Prisma.IntFieldUpdateOperationsInput | number
+  openedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  openCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastOpenedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  openedFromIp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  openedFromUserAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clickedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  clickCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastClickedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  clickedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clickedFromIp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clickedFromUserAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type EmailLogsCreateManyInput = {
@@ -370,6 +554,17 @@ export type EmailLogsCreateManyInput = {
   emailSubject: string
   emailBody: string
   retryCount?: number
+  openedAt?: Date | string | null
+  openCount?: number
+  lastOpenedAt?: Date | string | null
+  openedFromIp?: string | null
+  openedFromUserAgent?: string | null
+  clickedAt?: Date | string | null
+  clickCount?: number
+  lastClickedAt?: Date | string | null
+  clickedUrl?: string | null
+  clickedFromIp?: string | null
+  clickedFromUserAgent?: string | null
 }
 
 export type EmailLogsUpdateManyMutationInput = {
@@ -381,6 +576,17 @@ export type EmailLogsUpdateManyMutationInput = {
   emailSubject?: Prisma.StringFieldUpdateOperationsInput | string
   emailBody?: Prisma.StringFieldUpdateOperationsInput | string
   retryCount?: Prisma.IntFieldUpdateOperationsInput | number
+  openedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  openCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastOpenedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  openedFromIp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  openedFromUserAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clickedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  clickCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastClickedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  clickedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clickedFromIp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clickedFromUserAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type EmailLogsUncheckedUpdateManyInput = {
@@ -393,6 +599,17 @@ export type EmailLogsUncheckedUpdateManyInput = {
   emailSubject?: Prisma.StringFieldUpdateOperationsInput | string
   emailBody?: Prisma.StringFieldUpdateOperationsInput | string
   retryCount?: Prisma.IntFieldUpdateOperationsInput | number
+  openedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  openCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastOpenedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  openedFromIp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  openedFromUserAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clickedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  clickCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastClickedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  clickedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clickedFromIp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clickedFromUserAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type EmailLogsListRelationFilter = {
@@ -415,10 +632,23 @@ export type EmailLogsCountOrderByAggregateInput = {
   emailSubject?: Prisma.SortOrder
   emailBody?: Prisma.SortOrder
   retryCount?: Prisma.SortOrder
+  openedAt?: Prisma.SortOrder
+  openCount?: Prisma.SortOrder
+  lastOpenedAt?: Prisma.SortOrder
+  openedFromIp?: Prisma.SortOrder
+  openedFromUserAgent?: Prisma.SortOrder
+  clickedAt?: Prisma.SortOrder
+  clickCount?: Prisma.SortOrder
+  lastClickedAt?: Prisma.SortOrder
+  clickedUrl?: Prisma.SortOrder
+  clickedFromIp?: Prisma.SortOrder
+  clickedFromUserAgent?: Prisma.SortOrder
 }
 
 export type EmailLogsAvgOrderByAggregateInput = {
   retryCount?: Prisma.SortOrder
+  openCount?: Prisma.SortOrder
+  clickCount?: Prisma.SortOrder
 }
 
 export type EmailLogsMaxOrderByAggregateInput = {
@@ -431,6 +661,17 @@ export type EmailLogsMaxOrderByAggregateInput = {
   emailSubject?: Prisma.SortOrder
   emailBody?: Prisma.SortOrder
   retryCount?: Prisma.SortOrder
+  openedAt?: Prisma.SortOrder
+  openCount?: Prisma.SortOrder
+  lastOpenedAt?: Prisma.SortOrder
+  openedFromIp?: Prisma.SortOrder
+  openedFromUserAgent?: Prisma.SortOrder
+  clickedAt?: Prisma.SortOrder
+  clickCount?: Prisma.SortOrder
+  lastClickedAt?: Prisma.SortOrder
+  clickedUrl?: Prisma.SortOrder
+  clickedFromIp?: Prisma.SortOrder
+  clickedFromUserAgent?: Prisma.SortOrder
 }
 
 export type EmailLogsMinOrderByAggregateInput = {
@@ -443,10 +684,23 @@ export type EmailLogsMinOrderByAggregateInput = {
   emailSubject?: Prisma.SortOrder
   emailBody?: Prisma.SortOrder
   retryCount?: Prisma.SortOrder
+  openedAt?: Prisma.SortOrder
+  openCount?: Prisma.SortOrder
+  lastOpenedAt?: Prisma.SortOrder
+  openedFromIp?: Prisma.SortOrder
+  openedFromUserAgent?: Prisma.SortOrder
+  clickedAt?: Prisma.SortOrder
+  clickCount?: Prisma.SortOrder
+  lastClickedAt?: Prisma.SortOrder
+  clickedUrl?: Prisma.SortOrder
+  clickedFromIp?: Prisma.SortOrder
+  clickedFromUserAgent?: Prisma.SortOrder
 }
 
 export type EmailLogsSumOrderByAggregateInput = {
   retryCount?: Prisma.SortOrder
+  openCount?: Prisma.SortOrder
+  clickCount?: Prisma.SortOrder
 }
 
 export type EmailLogsCreateNestedManyWithoutApplicantInput = {
@@ -512,6 +766,17 @@ export type EmailLogsCreateWithoutApplicantInput = {
   emailSubject: string
   emailBody: string
   retryCount?: number
+  openedAt?: Date | string | null
+  openCount?: number
+  lastOpenedAt?: Date | string | null
+  openedFromIp?: string | null
+  openedFromUserAgent?: string | null
+  clickedAt?: Date | string | null
+  clickCount?: number
+  lastClickedAt?: Date | string | null
+  clickedUrl?: string | null
+  clickedFromIp?: string | null
+  clickedFromUserAgent?: string | null
 }
 
 export type EmailLogsUncheckedCreateWithoutApplicantInput = {
@@ -523,6 +788,17 @@ export type EmailLogsUncheckedCreateWithoutApplicantInput = {
   emailSubject: string
   emailBody: string
   retryCount?: number
+  openedAt?: Date | string | null
+  openCount?: number
+  lastOpenedAt?: Date | string | null
+  openedFromIp?: string | null
+  openedFromUserAgent?: string | null
+  clickedAt?: Date | string | null
+  clickCount?: number
+  lastClickedAt?: Date | string | null
+  clickedUrl?: string | null
+  clickedFromIp?: string | null
+  clickedFromUserAgent?: string | null
 }
 
 export type EmailLogsCreateOrConnectWithoutApplicantInput = {
@@ -563,6 +839,17 @@ export type EmailLogsScalarWhereInput = {
   emailSubject?: Prisma.StringFilter<"EmailLogs"> | string
   emailBody?: Prisma.StringFilter<"EmailLogs"> | string
   retryCount?: Prisma.IntFilter<"EmailLogs"> | number
+  openedAt?: Prisma.DateTimeNullableFilter<"EmailLogs"> | Date | string | null
+  openCount?: Prisma.IntFilter<"EmailLogs"> | number
+  lastOpenedAt?: Prisma.DateTimeNullableFilter<"EmailLogs"> | Date | string | null
+  openedFromIp?: Prisma.StringNullableFilter<"EmailLogs"> | string | null
+  openedFromUserAgent?: Prisma.StringNullableFilter<"EmailLogs"> | string | null
+  clickedAt?: Prisma.DateTimeNullableFilter<"EmailLogs"> | Date | string | null
+  clickCount?: Prisma.IntFilter<"EmailLogs"> | number
+  lastClickedAt?: Prisma.DateTimeNullableFilter<"EmailLogs"> | Date | string | null
+  clickedUrl?: Prisma.StringNullableFilter<"EmailLogs"> | string | null
+  clickedFromIp?: Prisma.StringNullableFilter<"EmailLogs"> | string | null
+  clickedFromUserAgent?: Prisma.StringNullableFilter<"EmailLogs"> | string | null
 }
 
 export type EmailLogsCreateManyApplicantInput = {
@@ -574,6 +861,17 @@ export type EmailLogsCreateManyApplicantInput = {
   emailSubject: string
   emailBody: string
   retryCount?: number
+  openedAt?: Date | string | null
+  openCount?: number
+  lastOpenedAt?: Date | string | null
+  openedFromIp?: string | null
+  openedFromUserAgent?: string | null
+  clickedAt?: Date | string | null
+  clickCount?: number
+  lastClickedAt?: Date | string | null
+  clickedUrl?: string | null
+  clickedFromIp?: string | null
+  clickedFromUserAgent?: string | null
 }
 
 export type EmailLogsUpdateWithoutApplicantInput = {
@@ -585,6 +883,17 @@ export type EmailLogsUpdateWithoutApplicantInput = {
   emailSubject?: Prisma.StringFieldUpdateOperationsInput | string
   emailBody?: Prisma.StringFieldUpdateOperationsInput | string
   retryCount?: Prisma.IntFieldUpdateOperationsInput | number
+  openedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  openCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastOpenedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  openedFromIp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  openedFromUserAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clickedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  clickCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastClickedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  clickedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clickedFromIp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clickedFromUserAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type EmailLogsUncheckedUpdateWithoutApplicantInput = {
@@ -596,6 +905,17 @@ export type EmailLogsUncheckedUpdateWithoutApplicantInput = {
   emailSubject?: Prisma.StringFieldUpdateOperationsInput | string
   emailBody?: Prisma.StringFieldUpdateOperationsInput | string
   retryCount?: Prisma.IntFieldUpdateOperationsInput | number
+  openedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  openCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastOpenedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  openedFromIp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  openedFromUserAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clickedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  clickCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastClickedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  clickedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clickedFromIp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clickedFromUserAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type EmailLogsUncheckedUpdateManyWithoutApplicantInput = {
@@ -607,6 +927,17 @@ export type EmailLogsUncheckedUpdateManyWithoutApplicantInput = {
   emailSubject?: Prisma.StringFieldUpdateOperationsInput | string
   emailBody?: Prisma.StringFieldUpdateOperationsInput | string
   retryCount?: Prisma.IntFieldUpdateOperationsInput | number
+  openedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  openCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastOpenedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  openedFromIp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  openedFromUserAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clickedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  clickCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastClickedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  clickedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clickedFromIp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clickedFromUserAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -621,6 +952,17 @@ export type EmailLogsSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   emailSubject?: boolean
   emailBody?: boolean
   retryCount?: boolean
+  openedAt?: boolean
+  openCount?: boolean
+  lastOpenedAt?: boolean
+  openedFromIp?: boolean
+  openedFromUserAgent?: boolean
+  clickedAt?: boolean
+  clickCount?: boolean
+  lastClickedAt?: boolean
+  clickedUrl?: boolean
+  clickedFromIp?: boolean
+  clickedFromUserAgent?: boolean
   applicant?: boolean | Prisma.ApplicantsDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["emailLogs"]>
 
@@ -634,6 +976,17 @@ export type EmailLogsSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   emailSubject?: boolean
   emailBody?: boolean
   retryCount?: boolean
+  openedAt?: boolean
+  openCount?: boolean
+  lastOpenedAt?: boolean
+  openedFromIp?: boolean
+  openedFromUserAgent?: boolean
+  clickedAt?: boolean
+  clickCount?: boolean
+  lastClickedAt?: boolean
+  clickedUrl?: boolean
+  clickedFromIp?: boolean
+  clickedFromUserAgent?: boolean
   applicant?: boolean | Prisma.ApplicantsDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["emailLogs"]>
 
@@ -647,6 +1000,17 @@ export type EmailLogsSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   emailSubject?: boolean
   emailBody?: boolean
   retryCount?: boolean
+  openedAt?: boolean
+  openCount?: boolean
+  lastOpenedAt?: boolean
+  openedFromIp?: boolean
+  openedFromUserAgent?: boolean
+  clickedAt?: boolean
+  clickCount?: boolean
+  lastClickedAt?: boolean
+  clickedUrl?: boolean
+  clickedFromIp?: boolean
+  clickedFromUserAgent?: boolean
   applicant?: boolean | Prisma.ApplicantsDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["emailLogs"]>
 
@@ -660,9 +1024,20 @@ export type EmailLogsSelectScalar = {
   emailSubject?: boolean
   emailBody?: boolean
   retryCount?: boolean
+  openedAt?: boolean
+  openCount?: boolean
+  lastOpenedAt?: boolean
+  openedFromIp?: boolean
+  openedFromUserAgent?: boolean
+  clickedAt?: boolean
+  clickCount?: boolean
+  lastClickedAt?: boolean
+  clickedUrl?: boolean
+  clickedFromIp?: boolean
+  clickedFromUserAgent?: boolean
 }
 
-export type EmailLogsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "applicantId" | "templateName" | "sentAt" | "status" | "errorMessage" | "emailSubject" | "emailBody" | "retryCount", ExtArgs["result"]["emailLogs"]>
+export type EmailLogsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "applicantId" | "templateName" | "sentAt" | "status" | "errorMessage" | "emailSubject" | "emailBody" | "retryCount" | "openedAt" | "openCount" | "lastOpenedAt" | "openedFromIp" | "openedFromUserAgent" | "clickedAt" | "clickCount" | "lastClickedAt" | "clickedUrl" | "clickedFromIp" | "clickedFromUserAgent", ExtArgs["result"]["emailLogs"]>
 export type EmailLogsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   applicant?: boolean | Prisma.ApplicantsDefaultArgs<ExtArgs>
 }
@@ -688,6 +1063,17 @@ export type $EmailLogsPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     emailSubject: string
     emailBody: string
     retryCount: number
+    openedAt: Date | null
+    openCount: number
+    lastOpenedAt: Date | null
+    openedFromIp: string | null
+    openedFromUserAgent: string | null
+    clickedAt: Date | null
+    clickCount: number
+    lastClickedAt: Date | null
+    clickedUrl: string | null
+    clickedFromIp: string | null
+    clickedFromUserAgent: string | null
   }, ExtArgs["result"]["emailLogs"]>
   composites: {}
 }
@@ -1121,6 +1507,17 @@ export interface EmailLogsFieldRefs {
   readonly emailSubject: Prisma.FieldRef<"EmailLogs", 'String'>
   readonly emailBody: Prisma.FieldRef<"EmailLogs", 'String'>
   readonly retryCount: Prisma.FieldRef<"EmailLogs", 'Int'>
+  readonly openedAt: Prisma.FieldRef<"EmailLogs", 'DateTime'>
+  readonly openCount: Prisma.FieldRef<"EmailLogs", 'Int'>
+  readonly lastOpenedAt: Prisma.FieldRef<"EmailLogs", 'DateTime'>
+  readonly openedFromIp: Prisma.FieldRef<"EmailLogs", 'String'>
+  readonly openedFromUserAgent: Prisma.FieldRef<"EmailLogs", 'String'>
+  readonly clickedAt: Prisma.FieldRef<"EmailLogs", 'DateTime'>
+  readonly clickCount: Prisma.FieldRef<"EmailLogs", 'Int'>
+  readonly lastClickedAt: Prisma.FieldRef<"EmailLogs", 'DateTime'>
+  readonly clickedUrl: Prisma.FieldRef<"EmailLogs", 'String'>
+  readonly clickedFromIp: Prisma.FieldRef<"EmailLogs", 'String'>
+  readonly clickedFromUserAgent: Prisma.FieldRef<"EmailLogs", 'String'>
 }
     
 

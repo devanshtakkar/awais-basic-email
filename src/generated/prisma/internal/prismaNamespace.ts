@@ -613,7 +613,18 @@ export const EmailLogsScalarFieldEnum = {
   errorMessage: 'errorMessage',
   emailSubject: 'emailSubject',
   emailBody: 'emailBody',
-  retryCount: 'retryCount'
+  retryCount: 'retryCount',
+  openedAt: 'openedAt',
+  openCount: 'openCount',
+  lastOpenedAt: 'lastOpenedAt',
+  openedFromIp: 'openedFromIp',
+  openedFromUserAgent: 'openedFromUserAgent',
+  clickedAt: 'clickedAt',
+  clickCount: 'clickCount',
+  lastClickedAt: 'lastClickedAt',
+  clickedUrl: 'clickedUrl',
+  clickedFromIp: 'clickedFromIp',
+  clickedFromUserAgent: 'clickedFromUserAgent'
 } as const
 
 export type EmailLogsScalarFieldEnum = (typeof EmailLogsScalarFieldEnum)[keyof typeof EmailLogsScalarFieldEnum]

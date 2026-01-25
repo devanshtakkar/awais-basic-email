@@ -24,9 +24,20 @@ export interface SendEmailOptions {
   unsubscribeUrl?: string;
 }
 
+export interface Review {
+  name: string;
+  stars: number;
+  heading: string;
+  content: string;
+  readMoreUrl?: string;
+}
+
 export interface TemplateData {
   fullName: string;
   email: string;
+  reviews?: Review[];
+  startNowUrl?: string;
+  unsubscribeUrl?: string;
   [key: string]: any;
 }
 
@@ -45,4 +56,22 @@ export interface RetryConfig {
 export interface UnsubscribeResponse {
   success: boolean;
   message: string;
+}
+
+export interface TrackingStats {
+  openedAt: Date | null;
+  openCount: number;
+  lastOpenedAt: Date | null;
+  clickedAt: Date | null;
+  clickCount: number;
+  lastClickedAt: Date | null;
+  clickedUrl: string | null;
+}
+
+export interface AggregateTrackingStats {
+  totalEmails: number;
+  totalOpens: number;
+  totalClicks: number;
+  uniqueOpens: number;
+  uniqueClicks: number;
 }

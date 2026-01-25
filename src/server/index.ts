@@ -4,6 +4,7 @@ import { prisma } from '../lib/prisma.js';
 import { applicantService } from '../services/applicant.service.js';
 import { emailSenderService } from '../services/email-sender.service.js';
 import { emailLogsService } from '../services/email-logs.service.js';
+import { trackingService } from '../services/tracking.service.js';
 import { Logger } from '../utils/logger.js';
 // Import templates to register them with the TemplateService
 import '../templates/index.js';
@@ -15,6 +16,20 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(express.json());
+
+// CORS middleware for tracking endpoints - essential for email clients and web-based email viewers
+app.use((req, res, next) => {
+  if (req.path.startsWith('/t/open/') || req.path.startsWith('/c/')) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept');
+    res.setHeader('Access-Control-Max-Age', '86400');
+    if (req.method === 'OPTIONS') {
+      return res.sendStatus(204);
+    }
+  }
+  next();
+});
 
 // Interface for Excel row data
 interface ExcelRow {
@@ -250,6 +265,122 @@ app.get('/api/unsubscribe/:applicantId', async (req: Request, res: Response) => 
   }
 });
 
+// GET /t/open/:emailLogId - Open tracking endpoint (1px pixel tracking)
+app.get('/t/open/:emailLogId', async (req: Request, res: Response) => {
+  logger.info(`[ROUTE MATCHED] /t/open/:emailLogId - Path: ${req.path}, URL: ${req.url}, Params: ${JSON.stringify(req.params)}`);
+  logger.info(`[ROUTE MATCHED] Headers - Referer: ${req.get('referer')}, Origin: ${req.get('origin')}, User-Agent: ${req.get('user-agent')?.substring(0, 100)}`);
+
+  const { emailLogId } = req.params;
+  let emailLogIdStr = typeof emailLogId === 'string' ? emailLogId : Array.isArray(emailLogId) ? emailLogId[0] : '';
+
+  // Remove .png extension if included
+  if (emailLogIdStr.endsWith('.png')) {
+    emailLogIdStr = emailLogIdStr.slice(0, -4);
+  }
+
+  await handleOpenTracking(req, res, emailLogIdStr);
+});
+
+// Helper function to handle open tracking
+async function handleOpenTracking(req: Request, res: Response, emailLogIdStr: string) {
+  const ip = (typeof req.ip === 'string' ? req.ip : (typeof req.socket.remoteAddress === 'string' ? req.socket.remoteAddress : undefined)) as string | undefined;
+  const userAgent = req.get('user-agent');
+
+  logger.info(`Open tracking request received for emailLogId: ${emailLogIdStr}`);
+
+  // Validate emailLogId
+  if (!emailLogIdStr || emailLogIdStr.trim() === '') {
+    logger.error(`Invalid emailLogId received: ${emailLogIdStr}`);
+    const transparentPixel = Buffer.from(
+      'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg==',
+      'base64'
+    );
+    res.setHeader('Content-Type', 'image/png');
+    return res.send(transparentPixel);
+  }
+
+  try {
+    // Record the open event
+    await trackingService.recordOpenEvent(emailLogIdStr, ip, userAgent);
+
+    // Return 1x1 transparent PNG
+    const transparentPixel = Buffer.from(
+      'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg==',
+      'base64'
+    );
+
+    // Set headers to allow image loading from any origin (for email clients)
+    res.setHeader('Content-Type', 'image/png');
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.send(transparentPixel);
+  } catch (error) {
+    logger.error(`Error in open tracking endpoint for ${emailLogIdStr}: ${error instanceof Error ? error.message : String(error)}`);
+    // Still return the pixel even if logging fails
+    const transparentPixel = Buffer.from(
+      'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg==',
+      'base64'
+    );
+    res.setHeader('Content-Type', 'image/png');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.send(transparentPixel);
+  }
+}
+
+
+// GET /c/:emailLogId - Click tracking endpoint (redirect link tracking)
+app.get('/c/:emailLogId', async (req: Request, res: Response) => {
+  const { emailLogId } = req.params;
+  const emailLogIdStr = typeof emailLogId === 'string' ? emailLogId : Array.isArray(emailLogId) ? emailLogId[0] : '';
+  const { url } = req.query;
+  const ip = (typeof req.ip === 'string' ? req.ip : (typeof req.socket.remoteAddress === 'string' ? req.socket.remoteAddress : undefined)) as string | undefined;
+  const userAgent = req.get('user-agent');
+
+  try {
+    if (!url || typeof url !== 'string') {
+      return res.status(400).send('Missing URL parameter');
+    }
+
+    const decodedUrl = decodeURIComponent(url);
+
+    // Record the click event
+    await trackingService.recordClickEvent(emailLogIdStr, decodedUrl, ip, userAgent);
+
+    // Redirect to the final URL
+    res.redirect(302, 'https://acornstrade.com/');
+  } catch (error) {
+    logger.error(`Error processing click tracking: ${error instanceof Error ? error.message : String(error)}`);
+    res.status(500).send('Internal server error');
+  }
+});
+
+// GET /api/tracking/stats - Get tracking statistics
+app.get('/api/tracking/stats', async (req: Request, res: Response) => {
+  try {
+    const stats = await emailLogsService.getAllTrackingStats();
+    res.json({ success: true, data: stats });
+  } catch (error) {
+    logger.error(`Failed to fetch tracking stats: ${error instanceof Error ? error.message : String(error)}`);
+    res.status(500).json({ success: false, error: 'Failed to fetch stats' });
+  }
+});
+
+// GET /api/tracking/:emailLogId - Get tracking for specific email
+app.get('/api/tracking/:emailLogId', async (req: Request, res: Response) => {
+  const { emailLogId } = req.params;
+  const emailLogIdStr = typeof emailLogId === 'string' ? emailLogId : Array.isArray(emailLogId) ? emailLogId[0] : '';
+
+  try {
+    const stats = await emailLogsService.getEmailTrackingStats(emailLogIdStr);
+    res.json({ success: true, data: stats });
+  } catch (error) {
+    logger.error(`Failed to fetch tracking for email log ${emailLogIdStr}: ${error instanceof Error ? error.message : String(error)}`);
+    res.status(404).json({ success: false, error: 'Email log not found' });
+  }
+});
+
 // GET /api/health - Health check endpoint
 app.get('/api/health', (req: Request, res: Response) => {
   res.json({ status: 'ok', message: 'Server is running' });
@@ -260,6 +391,10 @@ app.listen(PORT, () => {
   logger.success(`Express server running on port ${PORT}`);
   logger.info(`Health check: http://localhost:${PORT}/api/health`);
   logger.info(`Upload endpoint: http://localhost:${PORT}/api/upload-single`);
+  logger.info(`Open tracking: http://localhost:${PORT}/t/open/:emailLogId.png`);
+  logger.info(`Click tracking: http://localhost:${PORT}/c/:emailLogId?url=<encodedUrl>`);
+  logger.info(`Tracking stats: http://localhost:${PORT}/api/tracking/stats`);
+  logger.info(`Email tracking: http://localhost:${PORT}/api/tracking/:emailLogId`);
 });
 
 export { app };

@@ -113,6 +113,74 @@ export class EmailLogsService {
       throw error;
     }
   }
+
+  async getEmailTrackingStats(emailLogId: string): Promise<{
+    openedAt: Date | null;
+    openCount: number;
+    lastOpenedAt: Date | null;
+    clickedAt: Date | null;
+    clickCount: number;
+    lastClickedAt: Date | null;
+    clickedUrl: string | null;
+  }> {
+    try {
+      const log = await prisma.emailLogs.findUnique({
+        where: { id: emailLogId },
+        select: {
+          openedAt: true,
+          openCount: true,
+          lastOpenedAt: true,
+          clickedAt: true,
+          clickCount: true,
+          lastClickedAt: true,
+          clickedUrl: true,
+        },
+      });
+
+      if (!log) {
+        throw new Error('Email log not found');
+      }
+
+      emailLogsLogger.info(`Fetched tracking stats for email log ${emailLogId}`);
+
+      return log;
+    } catch (error) {
+      emailLogsLogger.error(`Failed to fetch tracking stats: ${error instanceof Error ? error.message : String(error)}`);
+      throw error;
+    }
+  }
+
+  async getAllTrackingStats(): Promise<{
+    totalEmails: number;
+    totalOpens: number;
+    totalClicks: number;
+    uniqueOpens: number;
+    uniqueClicks: number;
+  }> {
+    try {
+      const logs = await prisma.emailLogs.findMany({
+        select: {
+          openCount: true,
+          clickCount: true,
+          openedAt: true,
+          clickedAt: true,
+        },
+      });
+
+      const totalEmails = logs.length;
+      const totalOpens = logs.reduce((sum, log) => sum + log.openCount, 0);
+      const totalClicks = logs.reduce((sum, log) => sum + log.clickCount, 0);
+      const uniqueOpens = logs.filter(log => log.openedAt !== null).length;
+      const uniqueClicks = logs.filter(log => log.clickedAt !== null).length;
+
+      emailLogsLogger.info(`Fetched all tracking stats: ${totalEmails} emails, ${totalOpens} opens, ${totalClicks} clicks`);
+
+      return { totalEmails, totalOpens, totalClicks, uniqueOpens, uniqueClicks };
+    } catch (error) {
+      emailLogsLogger.error(`Failed to fetch all tracking stats: ${error instanceof Error ? error.message : String(error)}`);
+      throw error;
+    }
+  }
 }
 
 export const emailLogsService = new EmailLogsService();

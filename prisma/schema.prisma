@@ -27,14 +27,29 @@ model Applicants {
 }
 
 model EmailLogs {
-  id            String     @id @default(uuid())
-  applicantId   String
-  applicant     Applicants @relation(fields: [applicantId], references: [id], onDelete: Cascade)
-  templateName  String
-  sentAt        DateTime   @default(now())
-  status        String     // 'success' | 'failed'
-  errorMessage  String?
-  emailSubject  String
-  emailBody     String
-  retryCount    Int        @default(0)
+  id                    String     @id @default(uuid())
+  applicantId           String
+  applicant             Applicants @relation(fields: [applicantId], references: [id], onDelete: Cascade)
+  templateName          String
+  sentAt                DateTime   @default(now())
+  status                String     // 'success' | 'failed'
+  errorMessage          String?
+  emailSubject          String
+  emailBody             String
+  retryCount            Int        @default(0)
+
+  // Open Tracking Fields
+  openedAt              DateTime?
+  openCount             Int        @default(0)
+  lastOpenedAt          DateTime?
+  openedFromIp          String?
+  openedFromUserAgent   String?
+
+  // Click Tracking Fields
+  clickedAt             DateTime?
+  clickCount            Int        @default(0)
+  lastClickedAt         DateTime?
+  clickedUrl            String?
+  clickedFromIp         String?
+  clickedFromUserAgent  String?
 }

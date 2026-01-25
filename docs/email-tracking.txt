@@ -1,9 +1,0 @@
-1. emails are opened - pixel tracking
-1px ki image embed hoti hai email mai. 
-and jo GET request bajegi usko hum server pr log kr leenge
-
-2. link open tracking
-- user ne ek unique link pr click kiya
-- and woh fir log ho jaayega.
-
-someting.acorntrade.com/[unique-email-id] -> track -> acorntrade.com [final]
