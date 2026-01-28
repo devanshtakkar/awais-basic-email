@@ -352,7 +352,7 @@ app.get('/c/:emailLogId', async (req: Request, res: Response) => {
     await trackingService.recordClickEvent(emailLogIdStr, decodedUrl, ip, userAgent);
 
     // Redirect to the final URL
-    res.redirect(302, 'https://acornstrade.com/');
+    res.redirect(302, decodedUrl);
   } catch (error) {
     logger.error(`Error processing click tracking: ${error instanceof Error ? error.message : String(error)}`);
     res.status(500).send('Internal server error');
