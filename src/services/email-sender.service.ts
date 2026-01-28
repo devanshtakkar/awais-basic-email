@@ -23,10 +23,13 @@ export class EmailSenderService {
       const trackingClickSubdomain = baseUrl;
       const unsubscribeUrl = `${baseUrl}/api/unsubscribe/${id}?email=${encodeURIComponent(templateName)}`;
 
-      // Render template
+      // Render template with tracking URLs
       const { html, subject } = await templateService.renderTemplate(templateName, {
         fullName: full_name,
         email,
+        journeyUrl: 'https://acornstrade.com?cta=start_journey',
+        reviewsUrl: 'https://acornstrade.com?cta=more_reviews',
+        spotUrl: 'https://acornstrade.com?cta=claim_spot',
       });
 
       // Create email log first to get ID

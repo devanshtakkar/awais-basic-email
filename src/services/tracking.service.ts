@@ -26,7 +26,7 @@ export class TrackingService {
         trackingLogger.info(`Setting openedAt to: ${now}`);
       }
 
-      trackingLogger.info(`Updating email log with data:`, JSON.stringify(updateData, null, 2));
+      trackingLogger.info(`Updating email log with data: ${JSON.stringify(updateData, null, 2)}`);
       
       const result = await prisma.emailLogs.update({
         where: { id: emailLogId },

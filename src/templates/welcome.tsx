@@ -20,7 +20,7 @@ interface WelcomeEmailProps {
   fullName: string;
   email: string;
   reviews?: Review[];
-  startNowUrl: string;
+  startNowUrl?: string;
   unsubscribeUrl?: string;
 }
 

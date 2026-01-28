@@ -30,8 +30,9 @@ interface MarketingEmailProps {
     email: string;
     reviews?: MarketingReview[];
     baseUrl: string;
-    ctaUrl: string;
-    moreReviewsUrl: string;
+    journeyUrl: string;
+    reviewsUrl: string;
+    spotUrl: string;
     unsubscribeUrl?: string;
     deadlineDate?: string;
 }
@@ -52,8 +53,9 @@ export default function MarketingEmail({
         },
     ],
     baseUrl,
-    ctaUrl,
-    moreReviewsUrl,
+    journeyUrl,
+    reviewsUrl,
+    spotUrl,
     unsubscribeUrl,
     deadlineDate,
 }: MarketingEmailProps) {
@@ -131,7 +133,7 @@ export default function MarketingEmail({
                             This isn't about getting rich overnight – it's about breaking free from the cycle of mediocrity and finally building the independence you've always wanted. The question is, are you ready to stop being an employee and start being the boss of your own financial future?
                         </Text>
                         <Section style={hookCtaSection}>
-                            <Button style={hookCtaButton} href={ctaUrl}>
+                            <Button style={hookCtaButton} href={journeyUrl}>
                                 Start Your Journey Today
                             </Button>
                         </Section>
@@ -160,7 +162,7 @@ export default function MarketingEmail({
                             ))}
                         </Row>
                         <Section style={moreReviewsButtonSection}>
-                            <Button style={secondaryButton} href={moreReviewsUrl}>
+                            <Button style={secondaryButton} href={reviewsUrl}>
                                 See More Reviews
                             </Button>
                         </Section>
@@ -179,7 +181,7 @@ export default function MarketingEmail({
                             Click now before they're all gone.
                         </Text>
                         <Section style={ctaButtonSection}>
-                            <Button style={ctaButton} href={ctaUrl}>
+                            <Button style={ctaButton} href={spotUrl}>
                                 Claim Your Spot Now
                             </Button>
                         </Section>
@@ -225,8 +227,9 @@ MarketingEmail.PreviewProps = {
     fullName: 'John Doe',
     email: 'john.doe@example.com',
     baseUrl: BASE_URL ? BASE_URL : 'https://acornstrade.com',
-    ctaUrl: 'https://acornstrade.com/join',
-    moreReviewsUrl: 'https://acornstrade.com/reviews',
+    journeyUrl: 'https://acornstrade.com?cta=start_journey',
+    reviewsUrl: 'https://acornstrade.com?cta=more_reviews',
+    spotUrl: 'https://acornstrade.com?cta=claim_spot',
     unsubscribeUrl: 'https://acornstrade.com/unsubscribe',
 } as MarketingEmailProps;
 
