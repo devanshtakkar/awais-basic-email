@@ -1,0 +1,33 @@
+hook
+
+Remember when they told us to study hard, get good grades, and find a 'stable' job? That path was supposed to lead to security, but in today's market, it's leading to anxiety and uncertainty.But what if you could leverage that sharp, analytical mind they praised in your performance reviews to build something that no one can take away from you? It's time to stop trading hours for dollars and start creating a secondary income stream that works while you sleep. This isn't about getting rich overnight – it's about breaking free from the cycle of mediocrity and finally building the independence you've always wanted. The question is, are you ready to stop being an employee and start being the boss of your own financial future?"
+
+Review Section - with like the trustpilot like theme 
+theme - white background
+five stars - use the 5 star svg
+a large " (quotation mark) on the top left corner of the review
+
+this will be 1x2 grid on medium and large devices and 2x1 in mobile (stack of 3 review cards)
+
+reveiw 1 title: The best financial decision I’ve made in 8 years.
+content: Post self-employment 8 years ago, joining Decentralized Masters is the best financial decision I’ve ever made. I see the future now more clearly and you just cannot put a price tag on that… I am just in my 9th week and I'm in the green. I have knowledge for long-term growth outside of the bull market that builds long-term income and is collateralized.
+by: Joseph J.
+
+review 2: This has been the best learning experience of my life...
+review: This program has been the most enjoyable and the most productive learning experience I’ve ever had. Rodrigo is the man and either straightens out my old-fashioned way of thinking or gets me the answers to my questions. He goes above and beyond my expectations and the program has nearly paid for itself. Invest in this and invest in yourself and you will never go wrong.
+by: Andy C.
+
+A button that takes to the more reveiw page: 
+Link: [will be provied]
+
+Next Section for proved strategy and CTA
+The Secret
+
+While others sleep or commute, wealth is being made. It's not luck—it's one simple pattern that repeats daily. Our proven strategy helps you succeed. For a limited time, there's zero upfront cost. We ask only for your trust. We're opening just 150 spots till [dynamic date which is 4 days ahead of the current date] to maintain quality. Click now before they're all gone.
+
+At the end there will be company information other general information in the footer
+terms: https://acornstrade.com/terms
+privacy: https://acornstrade.com/privacy
+risk discloure: https://acornstrade.com/risk-warning
+
+Acorns logo are registered trademarks of Acorns Grow Incorporated. All product and company names are trademarks™ or registered® trademarks of their respective holders. Use of them does not imply any affiliation with or endorsement by them.
