@@ -19,8 +19,8 @@ export class EmailSenderService {
     try {
       // Generate URLs
       const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
-      const trackingBaseUrl = process.env.TRACKING_BASE_URL || baseUrl;
-      const trackingClickSubdomain = process.env.TRACKING_CLICK_SUBDOMAIN || baseUrl;
+      const trackingBaseUrl = baseUrl;
+      const trackingClickSubdomain = baseUrl;
       const unsubscribeUrl = `${baseUrl}/api/unsubscribe/${id}?email=${encodeURIComponent(templateName)}`;
 
       // Render template

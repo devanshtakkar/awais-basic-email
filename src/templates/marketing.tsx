@@ -130,6 +130,11 @@ export default function MarketingEmail({
                         <Text style={hookText}>
                             This isn't about getting rich overnight – it's about breaking free from the cycle of mediocrity and finally building the independence you've always wanted. The question is, are you ready to stop being an employee and start being the boss of your own financial future?
                         </Text>
+                        <Section style={hookCtaSection}>
+                            <Button style={hookCtaButton} href={ctaUrl}>
+                                Start Your Journey Today
+                            </Button>
+                        </Section>
                     </Section>
 
                     {/* Reviews Section */}
@@ -149,7 +154,7 @@ export default function MarketingEmail({
                                         />
                                         <Heading style={reviewTitle}>{review.title}</Heading>
                                         <Text style={reviewContent}>{review.content}</Text>
-                                        <Text style={reviewBy}>— {review.by}</Text>
+                                        <Text style={reviewBy}>{review.by}</Text>
                                     </Section>
                                 </Column>
                             ))}
@@ -165,7 +170,7 @@ export default function MarketingEmail({
                     <Section style={secretSection}>
                         <Heading style={secretHeading}>The Secret</Heading>
                         <Text style={secretText}>
-                            While others sleep or commute, wealth is being made. It's not luck—it's one simple pattern that repeats daily. Our proven strategy helps you succeed.
+                            While others sleep or commute, wealth is being made. It's not luck, it's one simple pattern that repeats daily. Our proven strategy helps you succeed.
                         </Text>
                         <Text style={secretText}>
                             For a limited time, there's zero upfront cost. We ask only for your trust. We're opening just <strong>150 spots</strong> till <strong>{getDeadlineDate()}</strong> to maintain quality.
@@ -290,6 +295,23 @@ const hookText = {
     fontSize: '16px',
     lineHeight: '1.8',
     margin: '0 0 20px 0',
+};
+
+const hookCtaSection = {
+    marginTop: '24px',
+    textAlign: 'center' as const,
+};
+
+const hookCtaButton = {
+    backgroundColor: '#22C55E',
+    borderRadius: '12px',
+    color: '#FFFFFF',
+    fontSize: '16px',
+    fontWeight: '700',
+    padding: '16px 40px',
+    textDecoration: 'none',
+    display: 'inline-block',
+    boxShadow: '0 4px 14px rgba(34, 197, 94, 0.4)',
 };
 
 const reviewsSection = {
