@@ -32,5 +32,6 @@ At the end there will be company information other general information in the fo
 terms: https://acornstrade.com/terms
 privacy: https://acornstrade.com/privacy
 risk discloure: https://acornstrade.com/risk-warning
+unsubscribe_url: (like the way it is generated in the website)
 
 Acorns logo are registered trademarks of Acorns Grow Incorporated. All product and company names are trademarks™ or registered® trademarks of their respective holders. Use of them does not imply any affiliation with or endorsement by them.

@@ -1,5 +1,6 @@
 import { templateService } from '../services/template.service.js';
 import WelcomeEmail from './welcome.js';
+import MarketingEmail, { MarketingReview } from './marketing.js';
 
 
 /**
@@ -19,7 +20,20 @@ export function registerTemplates() {
     }),
   }));
 
-
+  // Register marketing template (Acorns Trade email)
+  templateService.registerTemplate('marketing', (data) => ({
+    subject: 'Build Your Financial Independence - Limited Spots Available',
+    component: MarketingEmail({
+      fullName: data.fullName,
+      email: data.email,
+      reviews: data.reviews as MarketingReview[] | undefined,
+      baseUrl: data.baseUrl || 'https://acornstrade.com',
+      ctaUrl: data.ctaUrl || 'https://acornstrade.com/join',
+      moreReviewsUrl: data.moreReviewsUrl || 'https://acornstrade.com/reviews',
+      unsubscribeUrl: data.unsubscribeUrl,
+      deadlineDate: data.deadlineDate,
+    }),
+  }));
 
   // Add more templates here as needed
   // templateService.registerTemplate('template-name', (data) => ({ ... }));
