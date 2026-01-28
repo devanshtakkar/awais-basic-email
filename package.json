@@ -6,7 +6,8 @@
   "scripts": {
     "send-emails": "tsx src/cli/index.ts",
     "excel-import": "tsx src/cli/excel-import.ts",
-    "server": "tsx src/server/index.ts",
+    "start": "tsx src/server/index.ts",
+    "dev": "tsx watch src/server/index.ts",
     "create-sample-excel": "tsx scripts/create-sample-excel.ts",
     "preview": "npx email preview src/templates/preview.tsx",
     "test": "echo \"Error: no test specified\" && exit 1"

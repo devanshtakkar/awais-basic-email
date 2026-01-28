@@ -17,6 +17,9 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(express.json());
 
+// Serve static files from public directory at /public path
+app.use('/public', express.static('public'));
+
 // CORS middleware for tracking endpoints - essential for email clients and web-based email viewers
 app.use((req, res, next) => {
   if (req.path.startsWith('/t/open/') || req.path.startsWith('/c/')) {
@@ -389,6 +392,7 @@ app.get('/api/health', (req: Request, res: Response) => {
 // Start server
 app.listen(PORT, () => {
   logger.success(`Express server running on port ${PORT}`);
+  logger.info(`Static files: http://localhost:${PORT}/public/ (serving from 'public' directory)`);
   logger.info(`Health check: http://localhost:${PORT}/api/health`);
   logger.info(`Upload endpoint: http://localhost:${PORT}/api/upload-single`);
   logger.info(`Open tracking: http://localhost:${PORT}/t/open/:emailLogId.png`);

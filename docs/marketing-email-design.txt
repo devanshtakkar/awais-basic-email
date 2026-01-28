@@ -1,10 +1,13 @@
+BASE_URL = process.env.BASE_URL
+square_logo = BASE_URL/public/Acorns-Logo.svg
+
 hook
 
 Remember when they told us to study hard, get good grades, and find a 'stable' job? That path was supposed to lead to security, but in today's market, it's leading to anxiety and uncertainty.But what if you could leverage that sharp, analytical mind they praised in your performance reviews to build something that no one can take away from you? It's time to stop trading hours for dollars and start creating a secondary income stream that works while you sleep. This isn't about getting rich overnight – it's about breaking free from the cycle of mediocrity and finally building the independence you've always wanted. The question is, are you ready to stop being an employee and start being the boss of your own financial future?"
 
 Review Section - with like the trustpilot like theme 
 theme - white background
-five stars - use the 5 star svg
+five stars - use the 5 star svg BASE_URL/public/trustpilot-5stars.svg
 a large " (quotation mark) on the top left corner of the review
 
 this will be 1x2 grid on medium and large devices and 2x1 in mobile (stack of 3 review cards)
