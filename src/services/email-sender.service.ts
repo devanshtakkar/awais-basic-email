@@ -17,8 +17,8 @@ export class EmailSenderService {
     const { id, email, full_name } = applicant;
 
     try {
-      // Generate URLs
-      const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
+      // Generate URLs - normalize baseUrl to remove trailing slashes
+      const baseUrl = (process.env.BASE_URL || 'http://localhost:3000').replace(/\/+$/, '');
       const trackingBaseUrl = baseUrl;
       const trackingClickSubdomain = baseUrl;
       const unsubscribeUrl = `${baseUrl}/api/unsubscribe/${id}?email=${encodeURIComponent(templateName)}`;

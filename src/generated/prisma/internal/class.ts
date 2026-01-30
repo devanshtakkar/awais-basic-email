@@ -19,8 +19,8 @@ const config: runtime.GetPrismaClientConfig = {
   "previewFeatures": [],
   "clientVersion": "7.2.0",
   "engineVersion": "0c8ef2ce45c83248ab3df073180d5eda9e8be7a3",
-  "activeProvider": "sqlite",
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider = \"prisma-client\"\n  output   = \"../src/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"sqlite\"\n}\n\nmodel Applicants {\n  id                    String      @id @default(uuid())\n  full_name             String\n  email                 String      @unique\n  phone                 String?\n  country               String?\n  job_title             String?\n  unsubscribed          Boolean     @default(false)\n  unsubscribedAt        DateTime?\n  unsubscribedFromEmail String?\n  emailLogs             EmailLogs[]\n}\n\nmodel EmailLogs {\n  id           String     @id @default(uuid())\n  applicantId  String\n  applicant    Applicants @relation(fields: [applicantId], references: [id], onDelete: Cascade)\n  templateName String\n  sentAt       DateTime   @default(now())\n  status       String // 'success' | 'failed'\n  errorMessage String?\n  emailSubject String\n  emailBody    String\n  retryCount   Int        @default(0)\n\n  // Open Tracking Fields\n  openedAt            DateTime?\n  openCount           Int       @default(0)\n  lastOpenedAt        DateTime?\n  openedFromIp        String?\n  openedFromUserAgent String?\n\n  // Click Tracking Fields\n  clickedAt            DateTime?\n  clickCount           Int       @default(0)\n  lastClickedAt        DateTime?\n  clickedUrl           String?\n  clickedFromIp        String?\n  clickedFromUserAgent String?\n}\n",
+  "activeProvider": "mysql",
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider = \"prisma-client\"\n  output   = \"../src/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"mysql\"\n}\n\nmodel Applicants {\n  id                    String      @id @default(uuid())\n  full_name             String\n  email                 String      @unique\n  phone                 String?\n  country               String?\n  job_title             String?\n  unsubscribed          Boolean     @default(false)\n  unsubscribedAt        DateTime?\n  unsubscribedFromEmail String?\n  emailLogs             EmailLogs[]\n}\n\nmodel EmailLogs {\n  id           String     @id @default(uuid())\n  applicantId  String\n  applicant    Applicants @relation(fields: [applicantId], references: [id], onDelete: Cascade)\n  templateName String\n  sentAt       DateTime   @default(now())\n  status       String // 'success' | 'failed'\n  errorMessage String?    @db.Text\n  emailSubject String     @db.VarChar(500)\n  emailBody    String     @db.Text\n  retryCount   Int        @default(0)\n\n  // Open Tracking Fields\n  openedAt            DateTime?\n  openCount           Int       @default(0)\n  lastOpenedAt        DateTime?\n  openedFromIp        String?\n  openedFromUserAgent String?   @db.Text\n\n  // Click Tracking Fields\n  clickedAt            DateTime?\n  clickCount           Int       @default(0)\n  lastClickedAt        DateTime?\n  clickedUrl           String?\n  clickedFromIp        String?\n  clickedFromUserAgent String?   @db.Text\n}\n",
   "runtimeDataModel": {
     "models": {},
     "enums": {},
@@ -37,10 +37,10 @@ async function decodeBase64AsWasm(wasmBase64: string): Promise<WebAssembly.Modul
 }
 
 config.compilerWasm = {
-  getRuntime: async () => await import("@prisma/client/runtime/query_compiler_bg.sqlite.mjs"),
+  getRuntime: async () => await import("@prisma/client/runtime/query_compiler_bg.mysql.mjs"),
 
   getQueryCompilerWasmModule: async () => {
-    const { wasm } = await import("@prisma/client/runtime/query_compiler_bg.sqlite.wasm-base64.mjs")
+    const { wasm } = await import("@prisma/client/runtime/query_compiler_bg.mysql.wasm-base64.mjs")
     return await decodeBase64AsWasm(wasm)
   }
 }

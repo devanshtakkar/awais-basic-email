@@ -437,10 +437,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
           args: Prisma.ApplicantsCreateManyArgs<ExtArgs>
           result: BatchPayload
         }
-        createManyAndReturn: {
-          args: Prisma.ApplicantsCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ApplicantsPayload>[]
-        }
         delete: {
           args: Prisma.ApplicantsDeleteArgs<ExtArgs>
           result: runtime.Types.Utils.PayloadToResult<Prisma.$ApplicantsPayload>
@@ -456,10 +452,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         updateMany: {
           args: Prisma.ApplicantsUpdateManyArgs<ExtArgs>
           result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.ApplicantsUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ApplicantsPayload>[]
         }
         upsert: {
           args: Prisma.ApplicantsUpsertArgs<ExtArgs>
@@ -511,10 +503,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
           args: Prisma.EmailLogsCreateManyArgs<ExtArgs>
           result: BatchPayload
         }
-        createManyAndReturn: {
-          args: Prisma.EmailLogsCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailLogsPayload>[]
-        }
         delete: {
           args: Prisma.EmailLogsDeleteArgs<ExtArgs>
           result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailLogsPayload>
@@ -530,10 +518,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         updateMany: {
           args: Prisma.EmailLogsUpdateManyArgs<ExtArgs>
           result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.EmailLogsUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailLogsPayload>[]
         }
         upsert: {
           args: Prisma.EmailLogsUpsertArgs<ExtArgs>
@@ -583,6 +567,9 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
  */
 
 export const TransactionIsolationLevel = runtime.makeStrictEnum({
+  ReadUncommitted: 'ReadUncommitted',
+  ReadCommitted: 'ReadCommitted',
+  RepeatableRead: 'RepeatableRead',
   Serializable: 'Serializable'
 } as const)
 
@@ -644,6 +631,37 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const ApplicantsOrderByRelevanceFieldEnum = {
+  id: 'id',
+  full_name: 'full_name',
+  email: 'email',
+  phone: 'phone',
+  country: 'country',
+  job_title: 'job_title',
+  unsubscribedFromEmail: 'unsubscribedFromEmail'
+} as const
+
+export type ApplicantsOrderByRelevanceFieldEnum = (typeof ApplicantsOrderByRelevanceFieldEnum)[keyof typeof ApplicantsOrderByRelevanceFieldEnum]
+
+
+export const EmailLogsOrderByRelevanceFieldEnum = {
+  id: 'id',
+  applicantId: 'applicantId',
+  templateName: 'templateName',
+  status: 'status',
+  errorMessage: 'errorMessage',
+  emailSubject: 'emailSubject',
+  emailBody: 'emailBody',
+  openedFromIp: 'openedFromIp',
+  openedFromUserAgent: 'openedFromUserAgent',
+  clickedUrl: 'clickedUrl',
+  clickedFromIp: 'clickedFromIp',
+  clickedFromUserAgent: 'clickedFromUserAgent'
+} as const
+
+export type EmailLogsOrderByRelevanceFieldEnum = (typeof EmailLogsOrderByRelevanceFieldEnum)[keyof typeof EmailLogsOrderByRelevanceFieldEnum]
 
 
 

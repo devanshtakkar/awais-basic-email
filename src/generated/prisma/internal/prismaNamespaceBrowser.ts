@@ -62,6 +62,9 @@ export type ModelName = (typeof ModelName)[keyof typeof ModelName]
  */
 
 export const TransactionIsolationLevel = {
+  ReadUncommitted: 'ReadUncommitted',
+  ReadCommitted: 'ReadCommitted',
+  RepeatableRead: 'RepeatableRead',
   Serializable: 'Serializable'
 } as const
 
@@ -123,4 +126,35 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const ApplicantsOrderByRelevanceFieldEnum = {
+  id: 'id',
+  full_name: 'full_name',
+  email: 'email',
+  phone: 'phone',
+  country: 'country',
+  job_title: 'job_title',
+  unsubscribedFromEmail: 'unsubscribedFromEmail'
+} as const
+
+export type ApplicantsOrderByRelevanceFieldEnum = (typeof ApplicantsOrderByRelevanceFieldEnum)[keyof typeof ApplicantsOrderByRelevanceFieldEnum]
+
+
+export const EmailLogsOrderByRelevanceFieldEnum = {
+  id: 'id',
+  applicantId: 'applicantId',
+  templateName: 'templateName',
+  status: 'status',
+  errorMessage: 'errorMessage',
+  emailSubject: 'emailSubject',
+  emailBody: 'emailBody',
+  openedFromIp: 'openedFromIp',
+  openedFromUserAgent: 'openedFromUserAgent',
+  clickedUrl: 'clickedUrl',
+  clickedFromIp: 'clickedFromIp',
+  clickedFromUserAgent: 'clickedFromUserAgent'
+} as const
+
+export type EmailLogsOrderByRelevanceFieldEnum = (typeof EmailLogsOrderByRelevanceFieldEnum)[keyof typeof EmailLogsOrderByRelevanceFieldEnum]
 

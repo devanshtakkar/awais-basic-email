@@ -33,9 +33,9 @@ model EmailLogs {
   templateName          String
   sentAt                DateTime   @default(now())
   status                String     // 'success' | 'failed'
-  errorMessage          String?
-  emailSubject          String
-  emailBody             String
+  errorMessage          String?    @db.Text
+  emailSubject          String     @db.VarChar(500)
+  emailBody             String     @db.Text
   retryCount            Int        @default(0)
 
   // Open Tracking Fields
@@ -43,7 +43,7 @@ model EmailLogs {
   openCount             Int        @default(0)
   lastOpenedAt          DateTime?
   openedFromIp          String?
-  openedFromUserAgent   String?
+  openedFromUserAgent   String?    @db.Text
 
   // Click Tracking Fields
   clickedAt             DateTime?
@@ -51,5 +51,5 @@ model EmailLogs {
   lastClickedAt         DateTime?
   clickedUrl            String?
   clickedFromIp         String?
-  clickedFromUserAgent  String?
+  clickedFromUserAgent  String?    @db.Text
 }
