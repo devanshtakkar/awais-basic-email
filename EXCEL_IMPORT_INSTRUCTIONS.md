@@ -73,7 +73,7 @@ tsx src/cli/excel-import.ts process [options]
 Process an Excel file and send emails:
 
 ```bash
-npm run excel-import process -f sheets/applicants.xlsx -t welcome -c USA
+npm run excel-import -- process sheets/acorn-trade-data.xlsx marketing USA
 ```
 
 ### Dry Run Mode
@@ -81,7 +81,7 @@ npm run excel-import process -f sheets/applicants.xlsx -t welcome -c USA
 Preview the data without sending emails:
 
 ```bash
-npm run excel-import process -f sheets/applicants.xlsx -t welcome -c USA --dry-run
+npm run excel-import -- process sheets/acorn-trade-data.xlsx marketing USA --dry-run
 ```
 
 ### Force Resend Emails
@@ -89,7 +89,7 @@ npm run excel-import process -f sheets/applicants.xlsx -t welcome -c USA --dry-r
 Resend emails even if they were previously sent:
 
 ```bash
-npm run excel-import process -f sheets/applicants.xlsx -t welcome -c USA --force
+npm run excel-import -- process sheets/acorn-trade-data.xlsx marketing USA --force
 ```
 
 ### Custom Server URL
@@ -97,7 +97,7 @@ npm run excel-import process -f sheets/applicants.xlsx -t welcome -c USA --force
 Send data to a different server endpoint:
 
 ```bash
-npm run excel-import process -f sheets/applicants.xlsx -t welcome -c USA -u https://api.example.com/api/upload-single
+npm run excel-import -- process sheets/acorn-trade-data.xlsx marketing USA -u https://api.example.com/api/upload-single
 ```
 
 ## Output and Results

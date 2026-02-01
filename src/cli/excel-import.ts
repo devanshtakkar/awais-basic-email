@@ -50,18 +50,18 @@ program
 program
   .command('process')
   .description('Process Excel file and send data to Express endpoint')
-  .requiredOption('-f, --file <path>', 'Path to Excel file')
-  .requiredOption('-t, --template-name <name>', 'Name of the email template to use')
-  .requiredOption('-c, --country <country>', 'Country to assign to all applicants')
+  .argument('<file>', 'Path to Excel file')
+  .argument('<template-name>', 'Name of the email template to use')
+  .argument('<country>', 'Country to assign to all applicants')
   .option('--force', 'Force resend emails even if already sent')
   .option('-u, --url <url>', 'Express endpoint URL', 'https://api.acornstrade.com/api/upload-single')
   .option('--dry-run', 'Parse and preview without sending to server')
-  .action(async (options) => {
+  .action(async (file, templateName, country, options) => {
     try {
       logger.section('Excel Import CLI');
 
       // Validate file path
-      const filePath = path.resolve(options.file);
+      const filePath = path.resolve(file);
       if (!fs.existsSync(filePath)) {
         logger.error(`File not found: ${filePath}`);
         process.exit(1);
@@ -117,7 +117,7 @@ program
         });
       }
 
-      logger.info(`Country: ${options.country}`);
+      logger.info(`Country: ${country}`);
 
       // Display preview
       logger.section('Preview of valid rows:');
@@ -131,8 +131,8 @@ program
 
       if (options.dryRun) {
         logger.section('Dry Run Mode - No data will be sent to server');
-        logger.info(`Template: ${options.templateName}`);
-        logger.info(`Country: ${options.country}`);
+        logger.info(`Template: ${templateName}`);
+        logger.info(`Country: ${country}`);
         logger.info(`Force: ${options.force ? 'true' : 'false'}`);
         logger.info(`Valid rows to process: ${validRows.length}`);
         process.exit(0);
@@ -141,8 +141,8 @@ program
       // Send to Express endpoint
       logger.section('Sending data to Express endpoint');
       logger.info(`URL: ${options.url}`);
-      logger.info(`Template: ${options.templateName}`);
-      logger.info(`Country: ${options.country}`);
+      logger.info(`Template: ${templateName}`);
+      logger.info(`Country: ${country}`);
       logger.info(`Force: ${options.force ? 'true' : 'false'}`);
 
       // Statistics
@@ -161,9 +161,9 @@ program
 
         const requestBody: UploadSingleRequestBody = {
           data: row,
-          templateName: options.templateName,
+          templateName: templateName,
           force: options.force,
-          country: options.country,
+          country: country,
         };
 
         try {
