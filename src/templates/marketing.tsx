@@ -104,7 +104,7 @@ export default function MarketingEmail({
                             <tr>
                               <td style={logoCell}>
                                 <Img
-                                  src={`${BASE_URL}/public/Acorns-Logo.png`}
+                                  src={`${BASE_URL}/public/${encodeURIComponent('Acorns-Logo.png')}`}
                                   alt="Acorns Logo"
                                   width="32"
                                   height="32"
@@ -148,7 +148,7 @@ export default function MarketingEmail({
                                     <Section style={reviewCard}>
                                         <Text style={quotationMark}>"</Text>
                                         <Img
-                                            src={`${BASE_URL}/public/trustpilot stars 5.png`}
+                                            src={`${BASE_URL}/public/${encodeURIComponent('trustpilot stars 5.png')}`}
                                             alt="5 Stars"
                                             width="100"
                                             height="20"
